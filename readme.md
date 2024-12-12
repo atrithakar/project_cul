@@ -12,6 +12,8 @@ The modules are stored in a separate repository, which can be accessed here: [c_
 
 ## How to Install?
 
+### For Windows:
+
 1. Open your terminal.
 2. Clone the repository:
    ```bash
@@ -21,6 +23,20 @@ The modules are stored in a separate repository, which can be accessed here: [c_
    ```bash
    move cul.exe C:/Windows/System32
    ```
+
+### For Linux:
+
+1. Open your terminal.
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/atrithakar/project_cul
+   ```
+3. Move the `cul` file to `/bin`:
+   ```bash
+   mv /path/to/cul /bin
+   ```
+
+You can then remove the residual files if you wish.
 
 ---
 
