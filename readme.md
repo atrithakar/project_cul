@@ -57,10 +57,31 @@ cul uninstall <header_file_name>
 cul update <header_file_name>
 ```
 
+### Listing installed modules
+```bash
+cul list
+```
+
+### Listing installed modules and storing them into a text file
+```bash
+cul list > installed_modules.txt
+```
+
+### Listing installed requirements
+```bash
+cul freeze
+```
+
+### Listing installed requirements and storing them into a text file
+```bash
+cul freeze > requirements.txt
+```
+
 ### Getting Help
 ```bash
 cul help
 ```
+
 
 ---
 
