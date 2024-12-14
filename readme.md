@@ -44,17 +44,22 @@ You can then remove the residual files if you wish.
 
 ### Installing a New Header File
 ```bash
-cul install <header_file_name>
+cul install header_file_name
+```
+
+### Installing a Specific Version of a Header File:
+```bash
+cul install header_file_name==version
 ```
 
 ### Uninstalling an Existing Header File
 ```bash
-cul uninstall <header_file_name>
+cul uninstall header_file_name
 ```
 
 ### Updating a Header File
 ```bash
-cul update <header_file_name>
+cul update header_file_name
 ```
 
 ### Listing installed modules
