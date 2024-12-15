@@ -6,7 +6,7 @@ CUL is a command-line utility for the C/C++ programming language that simplifies
 
 Inspired by Python's pip, the goal of CUL is to provide an efficient and user-friendly way to manage project-specific header files, making them easier to download, update, and organize.
 
-The modules are stored in a separate repository, which can be accessed here: [c_cpp_modules](https://github.com/atrithakar/c_cpp_modules).
+The modules are stored in a separate repository along with the code of the backend file server, which can be accessed here: [c_cpp_modules](https://github.com/atrithakar/cul_backend).
 
 ---
 
@@ -40,6 +40,20 @@ You can then remove the residual files if you wish.
 
 ---
 
+## How to Build? (If You Want to Build It Youself)
+
+1. Install `pyinstaller`:
+    ```bash
+    pip install pyinstaller
+    ```
+
+2. Compile the code using `pyinstaller`:
+    ```bash
+    pyinstaller --onefile cul.py
+    ```
+
+---
+
 ## How to Use?
 
 ### Installing a New Header File
@@ -47,7 +61,7 @@ You can then remove the residual files if you wish.
 cul install header_file_name
 ```
 
-### Installing a Specific Version of a Header File:
+### Installing a Specific Version of a Header File
 ```bash
 cul install header_file_name==version
 ```
