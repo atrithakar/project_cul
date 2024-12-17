@@ -202,12 +202,6 @@ def main():
         freeze()
     elif command == 'list':
         list_modules()
-    elif command == 'check':
-        if len(sys.argv) < 3:
-            print_in_red("Error: No library specified for checking.")
-            help_message()
-        else:
-            check_requirements(sys.argv[2])
     else:
         print_in_red(f"Unknown command: {command}")
         help_message()
