@@ -23,6 +23,43 @@ def print_in_green(text):
 
 C_CPP_MODULES_DLD_DIR = "./c_cpp_modules_dld"
 BASE_URL = "https://culb.vercel.app"
+# BASE_URL = "http://192.168.0.104:5000"
+
+def check_requirements_and_download(module_name, version=''):
+    try:
+        version_url = f"{BASE_URL}/versions/{module_name}"
+        with urllib.request.urlopen(version_url) as response:
+            if response.status != 200:
+                raise Exception(f"HTTP {response.status}: Unable to fetch versions.")
+            
+            version_data = response.read().decode()
+            version_info = json.loads(version_data)
+        
+        requirements = version_info.get("requires", {})
+        latest_version = version_info.get("latest", "unknown")
+        target_version = version or latest_version
+        modules_to_install = requirements.get(target_version)
+        
+        if not modules_to_install:
+            return None
+        
+        print_in_green(f"Installing requirements for {module_name}")
+        for module in modules_to_install:
+            fetch_module(module.split("==")[0], module.split("==")[1])
+    
+    except urllib.error.HTTPError as http_err:
+        print_in_red(f"HTTP error: {http_err.code} {http_err.reason}")
+    except urllib.error.URLError as url_err:
+        print_in_red(f"URL error: {url_err.reason}")
+    except json.JSONDecodeError:
+        print_in_red("Failed to decode JSON response. Please check the server response.")
+    except KeyError as key_err:
+        print_in_red(f"Key error: {key_err}")
+    except Exception as e:
+        print_in_red(f"Unexpected error: {e}")
+
+
+
 
 def fetch_module(module_name, version=''):
     try:
@@ -44,6 +81,7 @@ def fetch_module(module_name, version=''):
             with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
                 zip_ref.extractall(module_dir)
                 print_in_green(f"Module '{module_name}' is successfully installed.")
+            check_requirements_and_download(module_name, version)
         except urllib.error.HTTPError as e:
             error_message = e.read().decode()
             error_message = json.loads(error_message)
@@ -164,6 +202,12 @@ def main():
         freeze()
     elif command == 'list':
         list_modules()
+    elif command == 'check':
+        if len(sys.argv) < 3:
+            print_in_red("Error: No library specified for checking.")
+            help_message()
+        else:
+            check_requirements(sys.argv[2])
     else:
         print_in_red(f"Unknown command: {command}")
         help_message()
