@@ -25,7 +25,7 @@ C_CPP_MODULES_DLD_DIR = "./c_cpp_modules_dld"
 BASE_URL = "https://culb.vercel.app"
 # BASE_URL = "http://192.168.0.104:5000"
 
-def check_requirements_and_download(module_name, version=''):
+def check_requirements_and_download(module_name, version='1.0.0'):
     try:
         version_url = f"{BASE_URL}/versions/{module_name}"
         with urllib.request.urlopen(version_url) as response:
@@ -80,7 +80,7 @@ def fetch_module(module_name, version=''):
             
             with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
                 zip_ref.extractall(module_dir)
-                print_in_green(f"Module '{module_name}' is successfully installed.")
+                print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
             check_requirements_and_download(module_name, version)
         except urllib.error.HTTPError as e:
             error_message = e.read().decode()
@@ -91,41 +91,77 @@ def fetch_module(module_name, version=''):
     except Exception as e:
         print_in_red(f"Unexpected error: {e}")
 
-def install(library):
-    if "==" in library:
-        fetch_module(library.split("==")[0], library.split("==")[1])
-    else:
-        fetch_module(library)
-
-def uninstall(library):
-    library_path = os.path.join(C_CPP_MODULES_DLD_DIR, library)
-    if os.path.isdir(library_path):
+def check_already_installed(module_name, version='1.0.0'):
+    module_exists = os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
+    version_exists = False
+    if module_exists:
         try:
-            shutil.rmtree(library_path)
-            print_in_green(f"Successfully uninstalled {library}.")
-        except Exception as e:
-            print_in_red(f"Error uninstalling library: {e}")
+            with open(os.path.join(C_CPP_MODULES_DLD_DIR, module_name, "module_info.json"), 'r') as f:
+                module_info = json.load(f)
+                if module_info.get("version") == version:
+                    version_exists = True
+        except (json.JSONDecodeError, IOError):
+            # print(json.JSONDecodeError)
+            # print(IOError)
+            return False
+        if module_exists and version_exists:
+            return True
+    
     else:
-        print_in_yellow(f"Warning: Library '{library}' not found in 'c_cpp_modules_dld'.")
+        return False
 
-def update(library):
-    if(os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, library))):
-        print(f"Updating {library}...")
-        install(library)
+def install(module_name):
+    # print(module_name)
+    if "==" in module_name:
+        module_name_ = module_name.split("==")[0]
+        version = module_name.split("==")[1]
+        if check_already_installed(module_name_, version):
+            print_in_yellow(f"Module '{module_name_}' Version '{version}' is already installed.")
+            return
+
+        print(f"Installing {module_name_} Version {version}...")
+        fetch_module(module_name_, version)
     else:
-        print_in_yellow(f"Warning: Library '{library}' not found in 'c_cpp_modules_dld'.")
+        if check_already_installed(module_name):
+            print_in_yellow(f"Module '{module_name}' is already installed.")
+            return
+
+        fetch_module(module_name)
+
+def uninstall(module_name):
+    module_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
+    if os.path.isdir(module_path):
+        try:
+            shutil.rmtree(module_path)
+            print_in_green(f"Successfully uninstalled {module_name}.")
+        except Exception as e:
+            print_in_red(f"Error uninstalling module: {e}")
+    else:
+        print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
+
+def update(module_name):
+    if(os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))):
+        print(f"Updating {module_name}...")
+        fetch_module(module_name)
+    else:
+        print_in_yellow(f"Warning: Library '{module_name}' not found in 'c_cpp_modules_dld'.")
 
 def help_message():
     help_text = """
     cul CLI - Command Line Interface for managing C/C++ libraries
     
     Commands:
-        install <library>    - Installs the specified C/C++ library.
-        uninstall <library>  - Uninstalls the specified library.
-        update <library>     - Updates the specified library to the latest version.
-        list                 - Lists all installed libraries.
-        freeze               - Outputs the installed libraries in requirements.txt format.
-        help                 - Shows this help message.
+        install library                            - Installs the specified C/C++ library.
+        install library==version                   - Installs the specified version of the library.
+        install library1 library2 library3 ...     - Installs multiple libraries. (Version is optional and can be specified for each library)
+        uninstall library                          - Uninstalls the specified library.
+        uninstall library1, library2, library3 ... - Uninstalls multiple libraries.
+        update library                             - Updates the specified library to the latest version.
+        update library1, library2, library3 ...    - Updates multiple libraries to the latest version.
+        search library                             - Searches for the specified library and displays available versions.
+        list                                       - Lists all installed libraries.
+        freeze                                     - Outputs the installed libraries in requirements.txt format.
+        help                                       - Shows the help message.
 
     """
     print(help_text)
@@ -170,6 +206,50 @@ def list_modules():
 
     print(tabulate(table_data, headers=["Package", "Version"], tablefmt="simple"))
 
+def search_module(module_name):
+    try:
+        search_url = f"{BASE_URL}/versions/{module_name}"
+
+        with urllib.request.urlopen(search_url) as response:
+            if response.status != 200:
+                raise urllib.error.HTTPError(search_url, response.status, f"Unable to fetch versions for {module_name}.", response.getheaders(), None)
+            
+            module_data = response.read().decode()
+            module_info = json.loads(module_data)
+            print("Module name: ", module_name)
+            available_versions = module_info.get("versions", [])
+            latest_version = module_info.get("latest", "unknown")
+            if available_versions:
+                print("Available versions:")
+                for version in available_versions:
+                    print(f"  - {version.get('version')}")
+                print(f"Latest version: {latest_version}")
+            else:
+                print_in_yellow("No versions available.")
+            
+
+
+    except urllib.error.HTTPError as http_err:
+        # Detailed HTTP error message including the status code and reason
+        print_in_red(f"HTTP error: {http_err.code} {http_err.reason}")
+    
+    except urllib.error.URLError as url_err:
+        # Error handling for general URL errors (e.g., network issues, invalid URL)
+        print_in_red(f"URL error: {url_err.reason}")
+    
+    except json.JSONDecodeError:
+        # Error handling if JSON decoding fails
+        print_in_red("Failed to decode the JSON response. Please check the server response.")
+    
+    except KeyError as key_err:
+        # Error handling for missing keys in the JSON response
+        print_in_red(f"Key error: {key_err}")
+    
+    except Exception as e:
+        # General exception handling for unexpected errors
+        print_in_red(f"Unexpected error: {e}")
+
+
 def main():
     
     if len(sys.argv) < 2:
@@ -183,25 +263,36 @@ def main():
             print_in_red("Error: No library specified for installation.")
             help_message()
         else:
-            install(sys.argv[2])
+            for i in range(2, len(sys.argv)):
+                # print(sys.argv[i])
+                # print("Installing...")
+                install(sys.argv[i])
     elif command == 'uninstall':
         if len(sys.argv) < 3:
             print_in_red("Error: No library specified for uninstallation.")
             help_message()
         else:
-            uninstall(sys.argv[2])
+            for i in range(2, len(sys.argv)):
+                uninstall(sys.argv[i])
     elif command == 'update':
         if len(sys.argv) < 3:
             print_in_red("Error: No library specified for updating.")
             help_message()
         else:
-            update(sys.argv[2])
+            for i in range(2, len(sys.argv)):
+                update(sys.argv[i])
     elif command == 'help':
         help_message()
     elif command == 'freeze':
         freeze()
     elif command == 'list':
         list_modules()
+    elif command == 'search':
+        if len(sys.argv) < 3:
+            print_in_red("Error: No library specified for searching.")
+            help_message()
+        else:
+            search_module(sys.argv[2])
     else:
         print_in_red(f"Unknown command: {command}")
         help_message()
