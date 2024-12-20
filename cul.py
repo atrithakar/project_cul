@@ -8,6 +8,7 @@ from tabulate import tabulate
 import zipfile
 import urllib.request
 import io
+import appdirs
 
 init(autoreset=True)
 
@@ -20,31 +21,60 @@ def print_in_yellow(text):
 def print_in_green(text):
     print(Fore.GREEN + text)
 
-
+CACHE_DIR = appdirs.user_cache_dir("CUL", "CUL_CLI")
 C_CPP_MODULES_DLD_DIR = "./c_cpp_modules_dld"
 BASE_URL = "https://culb.vercel.app"
 # BASE_URL = "http://192.168.0.104:5000"
 
+def cache_module(zip_ref, module_name, version='1.0.0'):
+    try:
+        os.makedirs(CACHE_DIR, exist_ok=True)
+        cache_filepath = os.path.join(CACHE_DIR, f"{module_name}_v{version}")
+        zip_ref.extractall(cache_filepath)
+        print_in_green(f"Module '{module_name} version {version}' has been successfully cached.")
+    except Exception as e:
+        print_in_red(f"Error caching module: {e}")
+
+def check_cache_and_install(module_name, version='1.0.0'):
+    cache_filepath = os.path.join(CACHE_DIR, f"{module_name}_v{version}")
+    if os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name)):
+        shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
+    if os.path.isdir(cache_filepath):
+        shutil.copytree(cache_filepath, os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
+        return True
+    return False
+    
+
 def check_requirements_and_download(module_name, version='1.0.0'):
     try:
-        version_url = f"{BASE_URL}/versions/{module_name}"
-        with urllib.request.urlopen(version_url) as response:
-            if response.status != 200:
-                raise Exception(f"HTTP {response.status}: Unable to fetch versions.")
+        # version_url = f"{BASE_URL}/versions/{module_name}"
+        # with urllib.request.urlopen(version_url) as response:
+        #     if response.status != 200:
+        #         raise Exception(f"HTTP {response.status}: Unable to fetch versions.")
             
-            version_data = response.read().decode()
-            version_info = json.loads(version_data)
+        #     version_data = response.read().decode()
+        #     version_info = json.loads(version_data)
+
+        version_json_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name, 'module_info.json')
+        version_info = None
+        with open(version_json_path, 'r') as f:
+            version_info = json.load(f)
+        # version_info = json.loads(version_json_path)
+        # print(version_info)
         
         requirements = version_info.get("requires", {})
-        latest_version = version_info.get("latest", "unknown")
-        target_version = version or latest_version
-        modules_to_install = requirements.get(target_version)
+        # latest_version = version_info.get("latest", "unknown")
+        # target_version = version or latest_version
+        # modules_to_install = requirements.get(target_version)
         
-        if not modules_to_install:
+        if not requirements:
             return None
         
         print_in_green(f"Installing requirements for {module_name}")
-        for module in modules_to_install:
+        for module in requirements:
+            if check_cache_and_install(module.split("==")[0], module.split("==")[1]):
+                print_in_green(f"Module '{module}' has been successfully installed from cache.")
+                continue
             fetch_module(module.split("==")[0], module.split("==")[1])
     
     except urllib.error.HTTPError as http_err:
@@ -58,10 +88,14 @@ def check_requirements_and_download(module_name, version='1.0.0'):
     except Exception as e:
         print_in_red(f"Unexpected error: {e}")
 
-
-
-
 def fetch_module(module_name, version=''):
+    cached_module_version = None
+    if version=='':
+        cached_module_version = '1.0.0'
+    if check_cache_and_install(module_name, cached_module_version or version):
+        print_in_green(f"Module '{module_name}' Version '{cached_module_version or version}' has been successfully installed from cache.")
+        check_requirements_and_download(module_name, version)
+        return
     try:
         zip_url = f"{BASE_URL}/files/{module_name}/{version}"
         
@@ -79,6 +113,7 @@ def fetch_module(module_name, version=''):
             os.makedirs(module_dir, exist_ok=True)
             
             with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
+                cache_module(zip_ref, module_name, cached_module_version or version)
                 zip_ref.extractall(module_dir)
                 print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
             check_requirements_and_download(module_name, version)
