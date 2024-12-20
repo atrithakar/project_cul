@@ -2,6 +2,7 @@ import shutil
 import os
 import appdirs
 from common_variables import C_CPP_MODULES_DLD_DIR
+from colorful_outputs import print_in_green, print_in_red
 
 CACHE_DIR = appdirs.user_cache_dir("CUL", "CUL_CLI")
 

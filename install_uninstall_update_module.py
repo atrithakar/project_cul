@@ -4,7 +4,7 @@ import urllib.request
 import io
 import zipfile
 from cache_and_install import *
-from colorful_outputs import print_in_green, print_in_red, print_in_yellow
+from colorful_outputs import *
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 
 def check_requirements_and_download(module_name, version='1.0.0'):
@@ -77,7 +77,7 @@ def fetch_module(module_name, version=''):
         with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
             cache_module(zip_ref, module_name, cached_module_version or version)
             zip_ref.extractall(module_dir)
-            print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
+            print_in_green(f"Module '{module_name}' Version '{version or cached_module_version}' has been successfully installed.")
         check_requirements_and_download(module_name, version)
     except urllib.error.HTTPError as e:
         error_message = e.read().decode()
@@ -137,9 +137,31 @@ def uninstall(module_name):
     else:
         print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
 
+def update_module(module_name):
+    try:
+        zip_url = f"{BASE_URL}/files/{module_name}/"
+        req = urllib.request.Request(zip_url)
+
+        with urllib.request.urlopen(req) as response:
+            if response.status != 200:
+                raise Exception(f"HTTP {response.status}: Unable to fetch module.")
+
+            zip_data = response.read()
+            zip_stream = io.BytesIO(zip_data)
+            # print(zip_stream)
+            with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
+                module_dir = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
+                shutil.rmtree(module_dir)
+                os.makedirs(module_dir, exist_ok=True)
+                zip_ref.extractall(module_dir)
+                print_in_green(f"Module '{module_name}' has been successfully updated.")
+    except Exception as e:
+        print_in_red(f"Error: {e}")
+
 def update(module_name):
     if(os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))):
         print(f"Updating {module_name}...")
-        fetch_module(module_name)
+        # fetch_module(module_name, update_called=True)
+        update_module(module_name)
     else:
         print_in_yellow(f"Warning: Library '{module_name}' not found in 'c_cpp_modules_dld'.")
