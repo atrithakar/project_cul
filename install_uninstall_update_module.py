@@ -6,6 +6,7 @@ import zipfile
 from cache_and_install import *
 from colorful_outputs import *
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
+from init import add_requirements
 
 def check_requirements_and_download(module_name, version='1.0.0'):
     try:
@@ -36,6 +37,7 @@ def check_requirements_and_download(module_name, version='1.0.0'):
         for module in requirements:
             if check_cache_and_install(module.split("==")[0], module.split("==")[1]):
                 print_in_green(f"Module '{module}' has been successfully installed from cache.")
+                add_requirements(module.split("==")[0], module.split("==")[1])
                 continue
             fetch_module(module.split("==")[0], module.split("==")[1])
     
@@ -53,6 +55,7 @@ def check_requirements_and_download(module_name, version='1.0.0'):
 def fetch_module(module_name, version=''):
     if check_cache_and_install(module_name, version):
         print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed from cache.")
+        add_requirements(module_name, version)
         check_requirements_and_download(module_name, version)
         return
     try:
@@ -77,6 +80,7 @@ def fetch_module(module_name, version=''):
             cache_module(zip_ref, module_name, version)
             zip_ref.extractall(module_dir)
             print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
+            add_requirements(module_name, version)
         check_requirements_and_download(module_name, version)
     except urllib.error.HTTPError as e:
         error_message = e.read().decode()
@@ -157,6 +161,7 @@ def update_module(module_name):
                 os.makedirs(module_dir, exist_ok=True)
                 zip_ref.extractall(module_dir)
                 print_in_green(f"Module '{module_name}' has been successfully updated.")
+                add_requirements(module_name, version)
                 cache_module(zip_ref, module_name, version)
     except Exception as e:
         print_in_red(f"Error: {e}")

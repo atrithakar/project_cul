@@ -4,6 +4,7 @@ from cache_and_install import *
 from install_uninstall_update_module import *
 from freeze_requirements import *
 from search_module import *
+from init import init
 
 def help_message():
     help_text = """
@@ -75,6 +76,8 @@ def main():
             help_message()
         elif sys.argv[2] == 'clear':
             clear_cache()
+    elif command == 'init':
+        init()
     else:
         print_in_red(f"Unknown command: {command}")
         help_message()
