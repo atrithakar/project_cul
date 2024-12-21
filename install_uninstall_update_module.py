@@ -53,11 +53,12 @@ def check_requirements_and_download(module_name, version='1.0.0'):
         print_in_red(f"Unexpected error: {e}")
 
 def fetch_module(module_name, version=''):
+
     if check_cache_and_install(module_name, version):
-        print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed from cache.")
         add_requirements(module_name, version)
         check_requirements_and_download(module_name, version)
         return
+    
     try:
         zip_url = f"{BASE_URL}/files/{module_name}/{version}"
         
@@ -77,9 +78,10 @@ def fetch_module(module_name, version=''):
             with zip_ref.open(f"module_info.json") as f:
                 module_info = json.load(f)
                 version = module_info.get("version")
-            cache_module(zip_ref, module_name, version)
+                
             zip_ref.extractall(module_dir)
             print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
+            cache_module(zip_ref, module_name, version)
             add_requirements(module_name, version)
         check_requirements_and_download(module_name, version)
     except urllib.error.HTTPError as e:
@@ -106,7 +108,6 @@ def check_already_installed(module_name, version='1.0.0'):
             return False
         if module_exists and version_exists:
             return True
-    
     else:
         return False
 

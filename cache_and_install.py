@@ -65,6 +65,7 @@ def check_cache_and_install(module_name, version=''):
             shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
         if os.path.isdir(cache_version_dir):
             shutil.copytree(cache_version_dir, os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
+            print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed from cache.")
             return True
         return False
     except FileNotFoundError:
