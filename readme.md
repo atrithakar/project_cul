@@ -16,40 +16,11 @@ The modules are stored in a separate repository along with the code of the backe
 - Uses caching technique to install the module again in less amount of time without using the internet.
 - Provides a way to list all the modules installed, both in human readable way and machine readable way, and store them into a .txt file.
 - Allows downloading different versions of modules.
+- Provides the way to initialize a project and maintain dependencies/requirements easily.
 
 ---
 
 ## How to Install?
-
-### For Windows:
-
-1. Open your terminal.
-2. Clone the repository:
-   ```bash
-   git clone https://github.com/atrithakar/project_cul
-   ```
-3. Move the `cul.exe` file to `C:/Windows/System32`:
-   ```bash
-   move cul.exe C:/Windows/System32
-   ```
-
-### For Linux:
-
-1. Open your terminal.
-2. Clone the repository:
-   ```bash
-   git clone https://github.com/atrithakar/project_cul
-   ```
-3. Move the `cul` file to `/bin`:
-   ```bash
-   mv /path/to/cul /bin
-   ```
-
-You can then remove the residual files if you wish.
-
----
-
-## How to Build? (If You Want to Build It Youself)
 
 1. Clone this repository:
     ```bash
@@ -69,6 +40,8 @@ You can then remove the residual files if you wish.
     ```bash
     pyinstaller --onefile cul.py
     ```
+
+5. For windows, add `cul.exe` to your system's `PATH` and for linux copy `cul` to `/bin`
 
 ---
 
@@ -121,6 +94,11 @@ cul help
 ### Clearing Cache
 ```bash
 cul cache clear
+```
+
+### Initializing a project
+```bash
+cul init
 ```
 
 ---
