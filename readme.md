@@ -51,12 +51,21 @@ You can then remove the residual files if you wish.
 
 ## How to Build? (If You Want to Build It Youself)
 
-1. Install `pyinstaller`:
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/atrithakar/project_cul
+    ```
+2. Install the requirements:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3. Install `pyinstaller`:
     ```bash
     pip install pyinstaller
     ```
 
-2. Compile the code using `pyinstaller`:
+4. Compile the code using `pyinstaller`:
     ```bash
     pyinstaller --onefile cul.py
     ```
@@ -109,7 +118,10 @@ cul freeze > requirements.txt
 ```bash
 cul help
 ```
-
+### Clearing Cache
+```bash
+cul cache clear
+```
 
 ---
 
