@@ -69,6 +69,12 @@ def main():
             help_message()
         else:
             search_module(sys.argv[2])
+    elif command == 'cache':
+        if len(sys.argv) < 3:
+            print_in_red("Error: No command specified related to cache.")
+            help_message()
+        elif sys.argv[2] == 'clear':
+            clear_cache()
     else:
         print_in_red(f"Unknown command: {command}")
         help_message()

@@ -51,11 +51,8 @@ def check_requirements_and_download(module_name, version='1.0.0'):
         print_in_red(f"Unexpected error: {e}")
 
 def fetch_module(module_name, version=''):
-    cached_module_version = None
-    if version=='':
-        cached_module_version = '1.0.0'
-    if check_cache_and_install(module_name, cached_module_version or version):
-        print_in_green(f"Module '{module_name}' Version '{cached_module_version or version}' has been successfully installed from cache.")
+    if check_cache_and_install(module_name, version):
+        print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed from cache.")
         check_requirements_and_download(module_name, version)
         return
     try:
@@ -68,16 +65,18 @@ def fetch_module(module_name, version=''):
                 raise Exception(f"HTTP {response.status}: Unable to fetch module.")
                 
             zip_data = response.read()
-            
         zip_stream = io.BytesIO(zip_data)
             
         module_dir = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
         os.makedirs(module_dir, exist_ok=True)
             
         with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
-            cache_module(zip_ref, module_name, cached_module_version or version)
+            with zip_ref.open(f"module_info.json") as f:
+                module_info = json.load(f)
+                version = module_info.get("version")
+            cache_module(zip_ref, module_name, version)
             zip_ref.extractall(module_dir)
-            print_in_green(f"Module '{module_name}' Version '{version or cached_module_version}' has been successfully installed.")
+            print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
         check_requirements_and_download(module_name, version)
     except urllib.error.HTTPError as e:
         error_message = e.read().decode()
@@ -150,11 +149,15 @@ def update_module(module_name):
             zip_stream = io.BytesIO(zip_data)
             # print(zip_stream)
             with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
+                with zip_ref.open(f"module_info.json") as f:
+                    module_info = json.load(f)
+                    version = module_info.get("version")
                 module_dir = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
                 shutil.rmtree(module_dir)
                 os.makedirs(module_dir, exist_ok=True)
                 zip_ref.extractall(module_dir)
                 print_in_green(f"Module '{module_name}' has been successfully updated.")
+                cache_module(zip_ref, module_name, version)
     except Exception as e:
         print_in_red(f"Error: {e}")
 
@@ -163,5 +166,6 @@ def update(module_name):
         print(f"Updating {module_name}...")
         # fetch_module(module_name, update_called=True)
         update_module(module_name)
+        # fetch_module(module_name)
     else:
         print_in_yellow(f"Warning: Library '{module_name}' not found in 'c_cpp_modules_dld'.")
