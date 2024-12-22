@@ -17,6 +17,7 @@ The modules are stored in a separate repository along with the code of the backe
 - Provides a way to list all the modules installed, both in human readable way and machine readable way, and store them into a .txt file.
 - Allows downloading different versions of modules.
 - Provides the way to initialize a project and maintain dependencies/requirements easily.
+- Installs all the required modules by the current installing module automatically
 
 ---
 
