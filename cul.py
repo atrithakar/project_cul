@@ -36,6 +36,11 @@ def main():
     command = sys.argv[1]
 
     if command == 'install':
+        if(sys.argv[2]=='-r'):
+            with open(sys.argv[3], 'r') as f:
+                for line in f:
+                    install(line.strip())
+        return
         if len(sys.argv) < 3:
             print_in_red("Error: No library specified for installation.")
             help_message()
