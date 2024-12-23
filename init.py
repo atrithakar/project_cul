@@ -61,6 +61,13 @@ def add_requirements(module_name, version):
             json.dump(data, f, indent=4)
         print_in_green(f"Added '{module_name}=={version}' to the requirements.")
     except FileNotFoundError as e:
-        print_in_yellow("Warning: Project not initialized. Please run 'cul init' to initialize the project.")
+        # print_in_yellow("Warning: Project not initialized. Please run 'cul init' to initialize the project.")
+        pass
+        '''
+        I had to do like this as the warning was kind of annoying from the user's perspective.
+        If I remove this FileNotFoundError exception, then the code will show "Error adding requirements: {e}".
+        So I had to keep this FileNotFoundError exception and write pass in the except block.
+        This will remain as it is until I find a better way to handle this.
+        '''
     except Exception as e:
         print_in_red(f"Error adding requirements: {e}")
