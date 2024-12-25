@@ -4,7 +4,7 @@ import json
 from colorful_outputs import print_in_yellow
 from common_variables import C_CPP_MODULES_DLD_DIR
 
-def freeze(invoked_by_list_modules=False):
+def freeze_2(invoked_by_list_modules=False):
     if not os.path.isdir(C_CPP_MODULES_DLD_DIR):
         print_in_yellow("Warning: 'c_cpp_modules_dld' directory not found.")
         return
@@ -37,6 +37,19 @@ def freeze(invoked_by_list_modules=False):
         return output
     else:
         print(formatted_output)
+
+def freeze(invoked_by_list_modules=False):
+    try:
+        with open("module_info.json", 'r') as f:
+            versions = json.load(f)['requires']
+            # versions = versions['requires']
+        if invoked_by_list_modules:
+            return versions
+        print("\n".join(versions))
+    except FileNotFoundError as e:
+        freeze_2(invoked_by_list_modules)
+    except Exception as e:
+        print_in_red(f"Unexpected Error: {e}")
 
 def list_modules():
     output = freeze(True)

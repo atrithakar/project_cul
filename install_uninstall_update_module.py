@@ -6,7 +6,7 @@ import zipfile
 from cache_and_install import *
 from colorful_outputs import *
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
-from init import add_requirements
+from init import add_requirements, remove_requirements
 
 def check_requirements_and_download(module_name, version='1.0.0'):
     try:
@@ -54,9 +54,10 @@ def check_requirements_and_download(module_name, version='1.0.0'):
 
 def fetch_module(module_name, version=''):
 
-    if check_cache_and_install(module_name, version):
-        add_requirements(module_name, version)
-        check_requirements_and_download(module_name, version)
+    installed_version = check_cache_and_install(module_name,version)
+    if installed_version:
+        add_requirements(module_name, installed_version)
+        check_requirements_and_download(module_name, installed_version)
         return
     
     try:
@@ -78,12 +79,13 @@ def fetch_module(module_name, version=''):
             with zip_ref.open(f"module_info.json") as f:
                 module_info = json.load(f)
                 version = module_info.get("version")
+                # print(installed_version)
                 
             zip_ref.extractall(module_dir)
             print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
             cache_module(zip_ref, module_name, version)
             add_requirements(module_name, version)
-        check_requirements_and_download(module_name, version)
+        check_requirements_and_download(module_name, installed_version)
     except urllib.error.HTTPError as e:
         error_message = e.read().decode()
         error_message = json.loads(error_message)
@@ -136,6 +138,7 @@ def uninstall(module_name):
         try:
             shutil.rmtree(module_path)
             print_in_green(f"Successfully uninstalled {module_name}.")
+            remove_requirements(module_name)
         except Exception as e:
             print_in_red(f"Error uninstalling module: {e}")
     else:

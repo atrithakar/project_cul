@@ -56,7 +56,8 @@ def add_requirements(module_name, version):
     try:
         with open("module_info.json", "r") as f:
             data = json.load(f)
-        data["requires"].append(f"{module_name}=={version}")
+        if not f"{module_name}=={version}"in data["requires"]:
+            data["requires"].append(f"{module_name}=={version}")
         with open("module_info.json", "w") as f:
             json.dump(data, f, indent=4)
         print_in_green(f"Added '{module_name}=={version}' to the requirements.")
@@ -71,3 +72,34 @@ def add_requirements(module_name, version):
         '''
     except Exception as e:
         print_in_red(f"Error adding requirements: {e}")
+
+def remove_requirements(module_name):
+    try:
+        with open("module_info.json", "r") as f:
+            data = json.load(f)
+
+        original_length = len(data.get("requires", []))
+
+        data["requires"] = [
+            req for req in data["requires"] if req.split("==")[0] != module_name
+        ]
+
+        if len(data["requires"]) < original_length:
+            with open("module_info.json", "w") as f:
+                json.dump(data, f, indent=4)
+            print_in_green(f"Removed '{module_name}' from the requirements.")
+        else:
+            print_in_yellow(f"Module '{module_name}' not found in the requirements.")
+
+    except FileNotFoundError:
+        pass
+        '''
+        I had to do like this as the warning was kind of annoying from the user's perspective.
+        If I remove this FileNotFoundError exception, then the code will show "Error adding requirements: {e}".
+        So I had to keep this FileNotFoundError exception and write pass in the except block.
+        This will remain as it is until I find a better way to handle this.
+        '''
+    except json.JSONDecodeError as e:
+        print_in_red("Error reading JSON file. It may be corrupted.")
+    except Exception as e:
+        print_in_red(f"Error removing requirements: {e}")
