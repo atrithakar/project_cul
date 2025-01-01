@@ -3,6 +3,20 @@ import json
 from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 
 def init():
+    '''
+    Initializes the project by creating a module_info.json file based on the user's input.
+    The user will be prompted to enter the name, version, description, author, license, keywords, entry point, test command, repository type, and repository URL.
+
+    Args:
+        None
+
+    Returns:
+        None, but creates a module_info.json file in the current directory.
+
+    Raises:
+        None
+
+    '''
     name = input(f"Enter the name of the project: ({os.getcwd().split("/")[-1]}) ")
     if name == "":
         name = os.getcwd().split("/")[-1]
@@ -53,6 +67,19 @@ def init():
 
 
 def add_requirements(module_name, version):
+    '''
+    Adds the module and its version to the requirements in the module_info.json file.
+
+    Args:
+        module_name (str): The name of the module.
+        version (str): The version of the module.
+    
+    Returns:
+        None, but adds the module and its version to the requirements in the module_info.json file.
+    
+    Raises:
+        Unexpected error if there is an error adding the requirements.
+    '''
     try:
         with open("module_info.json", "r") as f:
             data = json.load(f)
@@ -85,6 +112,18 @@ def add_requirements(module_name, version):
         print_in_red(f"Error adding requirements: {e}")
 
 def remove_requirements(module_name):
+    '''
+    Removes the module from the requirements in the module_info.json file.
+
+    Args:
+        module_name (str): The name of the module.
+
+    Returns:
+        None, but removes the module from the requirements in the module_info.json file.
+
+    Raises:
+        Unexpected error if there is an error removing the requirements.
+    '''
     try:
         with open("module_info.json", "r") as f:
             data = json.load(f)
@@ -105,7 +144,7 @@ def remove_requirements(module_name):
         pass
         '''
         I had to do like this as the warning was kind of annoying from the user's perspective.
-        If I remove this FileNotFoundError exception, then the code will show "Error adding requirements: {e}".
+        If I remove this FileNotFoundError exception, then the code will show "Error removing requirements: {e}".
         So I had to keep this FileNotFoundError exception and write pass in the except block.
         This will remain as it is until I find a better way to handle this.
         '''
