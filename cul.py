@@ -5,8 +5,22 @@ from install_uninstall_update_module import *
 from freeze_requirements import *
 from search_module import *
 from init import init
+# imports all the required functions from the various files and modules
+
 
 def help_message():
+    '''
+    Prints the help message for the cul CLI.
+
+    Args:
+        None
+    
+    Returns:
+        None
+    
+    Raises:
+        None
+    '''
     help_text = """
     cul CLI - Command Line Interface for managing C/C++ libraries
     
@@ -28,7 +42,7 @@ def help_message():
 
 
 def main():
-    
+    # Check if the user has provided a command
     if len(sys.argv) < 2:
         help_message()
         return
@@ -36,57 +50,64 @@ def main():
     command = sys.argv[1]
 
     if command == 'install':
-        if len(sys.argv) < 3:
+        if len(sys.argv) < 3: # No library specified, print error message and help message
             print_in_red("Error: No library specified for installation.")
             help_message()
             return
-        elif(sys.argv[2]=='-r'):
+        elif sys.argv[2] == '-r':  # Install from a requirements file
             with open(sys.argv[3], 'r') as f:
                 for line in f:
                     install(line.strip())
-            return
-        else:
+        else:  # Install individual libraries
             for i in range(2, len(sys.argv)):
-                # print(sys.argv[i])
-                # print("Installing...")
                 install(sys.argv[i])
+
     elif command == 'uninstall':
-        if len(sys.argv) < 3:
+        if len(sys.argv) < 3: # No library specified, print error message and help message
             print_in_red("Error: No library specified for uninstallation.")
             help_message()
-        else:
+        else: # Uninstall individual libraries
             for i in range(2, len(sys.argv)):
                 uninstall(sys.argv[i])
+
     elif command == 'update':
-        if len(sys.argv) < 3:
+        if len(sys.argv) < 3: # No library specified, print error message and help message
             print_in_red("Error: No library specified for updating.")
             help_message()
-        else:
+        else: # Update individual libraries
             for i in range(2, len(sys.argv)):
                 update(sys.argv[i])
-    elif command == 'help':
-        help_message()
+
+    elif command == 'help': 
+        help_message() # Print the help message
+
     elif command == 'freeze':
-        freeze()
+        freeze() # Print the installed libraries in requirements.txt format
+
     elif command == 'list':
-        list_modules()
+        list_modules() # List all the installed libraries
+
     elif command == 'search':
-        if len(sys.argv) < 3:
+        if len(sys.argv) < 3: # No library specified, print error message and help message
             print_in_red("Error: No library specified for searching.")
             help_message()
-        else:
+        else: # Search for the specified library
             search_module(sys.argv[2])
+
     elif command == 'cache':
-        if len(sys.argv) < 3:
+        if len(sys.argv) < 3: # No command specified, print error message and help message
             print_in_red("Error: No command specified related to cache.")
             help_message()
-        elif sys.argv[2] == 'clear':
+        elif sys.argv[2] == 'clear': # Clear the cache
             clear_cache()
-    elif command == 'init':
+
+    elif command == 'init': # Initialize the cul CLI
         init()
-    else:
+
+    else: # Invalid command, print error message and help message
         print_in_red(f"Unknown command: {command}")
         help_message()
+
 
 if __name__ == "__main__":
     main()
