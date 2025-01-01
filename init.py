@@ -56,8 +56,19 @@ def add_requirements(module_name, version):
     try:
         with open("module_info.json", "r") as f:
             data = json.load(f)
-        if not f"{module_name}=={version}"in data["requires"]:
-            data["requires"].append(f"{module_name}=={version}")
+        
+        currently_installed = data.get("requires", [])
+        # print(currently_installed)
+        for req in currently_installed:
+            if module_name == req.split("==")[0]:
+                print(module_name)
+                print(req)
+                # remove_requirements(module_name)
+                data["requires"].remove(req)
+                print(f"Removed the existing version of the module {module_name} v{req.split('==')[1]}")
+
+
+        data["requires"].append(f"{module_name}=={version}")
         with open("module_info.json", "w") as f:
             json.dump(data, f, indent=4)
         print_in_green(f"Added '{module_name}=={version}' to the requirements.")
@@ -83,7 +94,6 @@ def remove_requirements(module_name):
         data["requires"] = [
             req for req in data["requires"] if req.split("==")[0] != module_name
         ]
-
         if len(data["requires"]) < original_length:
             with open("module_info.json", "w") as f:
                 json.dump(data, f, indent=4)
