@@ -5,6 +5,22 @@ from colorful_outputs import print_in_red, print_in_yellow
 
 
 def search_module(module_name):
+    '''
+    Searches if the module is available on the server and prints the available versions along with the latest version
+
+    Args:
+        module_name (str): The name of the module to search
+    
+    Returns:
+        None
+
+    Raises:
+        HTTPError: If the server returns an unsuccessful status code
+        URLError: If the URL is invalid
+        JSONDecodeError: If the JSON decoding fails
+        KeyError: If the JSON response is missing keys
+        Exception: If any unexpected error occurs
+    '''
     try:
         search_url = f"{BASE_URL}/versions/{module_name}"
 

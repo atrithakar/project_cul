@@ -9,6 +9,18 @@ CACHE_DIR = appdirs.user_cache_dir("CUL", "CUL_CLI")
 
 
 def manage_versions_json(module_name):
+    '''
+    Manages the versions.json file for the specified module in the cache directory
+
+    Args:
+        module_name (str): The name of the module to manage/modify the versions.json file for
+
+    Returns:
+        None
+
+    Raises:
+        Exception: If any unexpected error occurs
+    '''
     module_dir = os.path.join(CACHE_DIR, module_name)
     versions_file = os.path.join(module_dir, "versions.json")
 
@@ -37,6 +49,20 @@ def manage_versions_json(module_name):
     # print(f"versions.json for module '{module_name}' updated successfully.")
 
 def cache_module(zip_ref, module_name, version='1.0.0'):
+    '''
+    Cache the module along with its version in the cache directory
+
+    Args:
+        zip_ref (ZipFile): The ZipFile object of the module to cache
+        module_name (str): The name of the module to cache
+        version (str): The version of the module to cache
+
+    Returns:
+        None
+
+    Raises:
+        Exception: If any unexpected error occurs
+    '''
     try:
         os.makedirs(CACHE_DIR, exist_ok=True)
         # cache_filepath = os.path.join(CACHE_DIR, f"{module_name}_v{version}")
@@ -53,6 +79,21 @@ def cache_module(zip_ref, module_name, version='1.0.0'):
         print_in_red(f"Error caching module: {e}")
 
 def check_cache_and_install(module_name, version=''):
+    '''
+    Checks if the module of user specified version is available in the cache and installs it if found
+
+    Args:
+        module_name (str): The name of the module to install
+        version (str): The version of the module to install
+
+    Returns:
+        version (str): The version of the module that was installed from the cache
+        False (bool): Otherwise
+
+    Raises:
+        FileNotFoundError: If the cache directory does not exist
+        Exception: If any unexpected error occurs
+    '''
     # cache_filepath = os.path.join(CACHE_DIR, f"{module_name}_v{version}")
     # print(f"First: {module_name}, {version}")
     cache_module_dir = os.path.join(CACHE_DIR, module_name)
@@ -82,6 +123,19 @@ def check_cache_and_install(module_name, version=''):
         return False
 
 def clear_cache():
+    '''
+    Clears the cache directory
+
+    Args:
+        None
+    
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If the cache directory does not exist
+        Exception: If any unexpected error occurs
+    '''
     try:
         shutil.rmtree(CACHE_DIR)
         print_in_green("Cache cleared successfully.")

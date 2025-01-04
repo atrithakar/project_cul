@@ -9,6 +9,23 @@ from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 from init import add_requirements, remove_requirements
 
 def check_requirements_and_download(module_name, version='1.0.0'):
+    '''
+    Checks the requirements of the current module being downloaded and installs them if not already installed
+
+    Args:
+        module_name (str): The name of the module
+        version (str): The version of the module
+
+    Returns:
+        None
+
+    Raises:
+        HTTPError: If the server returns an unsuccessful status code
+        URLError: If the URL is invalid
+        JSONDecodeError: If the JSON decoding fails
+        KeyError: If the JSON response is missing keys
+        Exception: If any unexpected error occurs
+    '''
     try:
         # version_url = f"{BASE_URL}/versions/{module_name}"
         # with urllib.request.urlopen(version_url) as response:
@@ -53,7 +70,21 @@ def check_requirements_and_download(module_name, version='1.0.0'):
         print_in_red(f"Unexpected error: {e}")
 
 def fetch_module(module_name, version=''):
+    '''
+    Downloads the module from the server and extracts it to the 'c_cpp_modules_dld' directory
 
+    Args:
+        module_name (str): The name of the module
+        version (str): The version of the module
+
+    Returns:
+        None
+
+    Raises:
+        HTTPError: If the server returns an unsuccessful status code
+        URLError: If the URL is invalid
+        Exception: If any unexpected error occurs
+    '''
     installed_version = check_cache_and_install(module_name,version)
     if installed_version:
         add_requirements(module_name, installed_version)
@@ -96,6 +127,19 @@ def fetch_module(module_name, version=''):
         print_in_red(f"Unexpected error Here: {e}")
 
 def check_already_installed(module_name, version='1.0.0'):
+    '''
+    Checks if the module user is trying to install is already installed or not
+
+    Args:
+        module_name (str): The name of the module
+        version (str): The version of the module
+
+    Returns:
+        bool: True if the module is already installed, False otherwise
+
+    Raises:
+        None
+    '''
     module_exists = os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
     version_exists = False
     if module_exists:
@@ -114,6 +158,18 @@ def check_already_installed(module_name, version='1.0.0'):
         return False
 
 def install(module_name):
+    '''
+    Splits the module name and version if the user has provided the version and installs the module
+
+    Args:
+        module_name (str): The name of the module to install
+
+    Returns:
+        None
+
+    Raises:
+        None
+    '''
     # print(module_name)
     if "==" in module_name:
         module_name_ = module_name.split("==")[0]
@@ -133,6 +189,18 @@ def install(module_name):
 
 
 def uninstall(module_name):
+    '''
+    Uninstalls the module from the 'c_cpp_modules_dld' directory
+
+    Args:
+        module_name (str): The name of the module to uninstall
+
+    Returns:
+        None
+
+    Raises:
+        Exception: If there is an error while uninstalling the module
+    '''
     module_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
     if os.path.isdir(module_path):
         try:
@@ -145,6 +213,18 @@ def uninstall(module_name):
         print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
 
 def update_module(module_name):
+    '''
+    Updates the module to the latest version available on the server
+
+    Args:
+        module_name (str): The name of the module to update
+
+    Returns:
+        None
+
+    Raises:
+        Exception: If there is an error while updating the module
+    '''
     try:
         zip_url = f"{BASE_URL}/files/{module_name}/"
         req = urllib.request.Request(zip_url)
@@ -171,6 +251,18 @@ def update_module(module_name):
         print_in_red(f"Error: {e}")
 
 def update(module_name):
+    '''
+    Checks if the module is already installed and updates it to the latest version available on the server else gives a warning
+
+    Args:
+        module_name (str): The name of the module to update
+    
+    Returns:
+        None
+
+    Raises:
+        None
+    '''
     if(os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))):
         print(f"Updating {module_name}...")
         # fetch_module(module_name, update_called=True)
