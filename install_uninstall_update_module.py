@@ -7,6 +7,7 @@ from cache_and_install import *
 from colorful_outputs import *
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 from init import add_requirements, remove_requirements
+from helper_functions import parse_module
 
 def check_requirements_and_download(module_name, version='1.0.0'):
     '''
@@ -27,36 +28,23 @@ def check_requirements_and_download(module_name, version='1.0.0'):
         Exception: If any unexpected error occurs
     '''
     try:
-        # version_url = f"{BASE_URL}/versions/{module_name}"
-        # with urllib.request.urlopen(version_url) as response:
-        #     if response.status != 200:
-        #         raise Exception(f"HTTP {response.status}: Unable to fetch versions.")
-            
-        #     version_data = response.read().decode()
-        #     version_info = json.loads(version_data)
-
         version_json_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name, 'module_info.json')
         version_info = None
         with open(version_json_path, 'r') as f:
             version_info = json.load(f)
-        # version_info = json.loads(version_json_path)
-        # print(version_info)
         
         requirements = version_info.get("requires", {})
-        # latest_version = version_info.get("latest", "unknown")
-        # target_version = version or latest_version
-        # modules_to_install = requirements.get(target_version)
-        
         if not requirements:
             return None
         
         print_in_green(f"Installing requirements for {module_name}")
         for module in requirements:
-            if check_cache_and_install(module.split("==")[0], module.split("==")[1]):
+            module_name, version = parse_module(module)
+            if check_cache_and_install(module_name, version):
                 print_in_green(f"Module '{module}' has been successfully installed from cache.")
-                add_requirements(module.split("==")[0], module.split("==")[1])
+                add_requirements(module_name, version)
                 continue
-            fetch_module(module.split("==")[0], module.split("==")[1])
+            fetch_module(module_name, version)
     
     except urllib.error.HTTPError as http_err:
         print_in_red(f"HTTP error: {http_err.code} {http_err.reason}")
@@ -170,10 +158,8 @@ def install(module_name):
     Raises:
         None
     '''
-    # print(module_name)
-    if "==" in module_name:
-        module_name_ = module_name.split("==")[0]
-        version = module_name.split("==")[1]
+    module_name_, version = parse_module(module_name)
+    if version:
         if check_already_installed(module_name_, version):
             print_in_yellow(f"Module '{module_name_}' Version '{version}' is already installed.")
             return
