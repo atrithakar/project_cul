@@ -102,7 +102,10 @@ def main():
             clear_cache()
 
     elif command == 'init': # Initialize the cul CLI
-        init()
+        if len(sys.argv) > 2 and sys.argv[2] == '-y':
+            init(True)
+            return
+        init(False)
 
     else: # Invalid command, print error message and help message
         print_in_red(f"Unknown command: {command}")

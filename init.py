@@ -2,7 +2,7 @@ import os
 import json
 from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 
-def init():
+def init(all_yes=False):
     '''
     Initializes the project by creating a module_info.json file based on the user's input.
     The user will be prompted to enter the name, version, description, author, license, keywords, entry point, test command, repository type, and repository URL.
@@ -17,29 +17,44 @@ def init():
         None
 
     '''
-    name = input(f"Enter the name of the project: ({os.getcwd().split("/")[-1]}) ")
-    if name == "":
-        name = os.getcwd().split("/")[-1]
-    version = input("Enter the version of the project: (1.0.0) ")
-    if version == "":
+    if all_yes:
+        name = os.getcwd().split("\\")
+        print(name)
+        name = name[-1]
+        print(name)
         version = "1.0.0"
-    description = input("Enter the description of the project: ")
-    author = input("Enter the author of the project: ")
-    license = input("Enter the license of the project: (MIT) ")
-    if license == "":
+        description = ""
+        author = ""
         license = "MIT"
-    keywords = input("Enter the keywords for the project: (separated by commas) ")
-    keywords = keywords.split(",")
-    entry_point = input("Enter the entry point of the project: (main.py) ")
-    if entry_point == "":
+        keywords = []
         entry_point = "main.py"
-    test_command = input("Enter the test command for the project: (python -m unittest discover) ")
-    if test_command == "":
-        test_command = "python -m unittest discover"
-    repo_type = input("Enter the repository type for the project: (git) ")
-    if repo_type == "":
+        test_command = "None"
         repo_type = "git"
-    repo_url = input("Enter the repository URL for the project: ")
+        repo_url = ""
+    else:
+        name = input(f"Enter the name of the project: ({os.getcwd().split("\\")[-1]}) ")
+        if name == "":
+            name = os.getcwd().split("\\")[-1]
+        version = input("Enter the version of the project: (1.0.0) ")
+        if version == "":
+            version = "1.0.0"
+        description = input("Enter the description of the project: ")
+        author = input("Enter the author of the project: ")
+        license = input("Enter the license of the project: (MIT) ")
+        if license == "":
+            license = "MIT"
+        keywords = input("Enter the keywords for the project: (separated by commas) ")
+        keywords = keywords.split(",")
+        entry_point = input("Enter the entry point of the project: (main.py) ")
+        if entry_point == "":
+            entry_point = "main.py"
+        test_command = input("Enter the test command for the project: (python -m unittest discover) ")
+        if test_command == "":
+            test_command = "None"
+        repo_type = input("Enter the repository type for the project: (git) ")
+        if repo_type == "":
+            repo_type = "git"
+        repo_url = input("Enter the repository URL for the project: ")
 
     data = {
         "name": name,
@@ -88,9 +103,6 @@ def add_requirements(module_name, version):
         # print(currently_installed)
         for req in currently_installed:
             if module_name == req.split("==")[0]:
-                print(module_name)
-                print(req)
-                # remove_requirements(module_name)
                 data["requires"].remove(req)
                 print(f"Removed the existing version of the module {module_name} v{req.split('==')[1]}")
 
