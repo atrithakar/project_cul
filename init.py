@@ -44,7 +44,7 @@ def init(all_yes=False):
         if license == "":
             license = "MIT"
         keywords = input("Enter the keywords for the project: (separated by commas) ")
-        keywords = keywords.split(",")
+        keywords = [keyword.strip() for keyword in keywords.split(",")]
         entry_point = input("Enter the entry point of the project: (main.py) ")
         if entry_point == "":
             entry_point = "main.py"
