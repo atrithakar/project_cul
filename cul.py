@@ -5,6 +5,7 @@ from install_uninstall_update_module import install, uninstall, update
 from freeze_requirements import freeze, list_modules
 from search_module import search_module
 from init import init
+import codecs
 # imports all the required functions from the various files and modules
 
 
@@ -64,8 +65,9 @@ def main():
                 print_in_red("Error: No requirements file specified for installation.")
                 help_message()
                 return
-            with open(sys.argv[3], 'r') as f:
-                for line in f:
+            with codecs.open(sys.argv[3], 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+                for line in lines:
                     install(line.strip())
         else:  # Install individual libraries
             for i in range(2, len(sys.argv)):
