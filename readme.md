@@ -131,4 +131,4 @@ However, as I worked on the project, my desire to enhance its capabilities grew.
 
 I continue to develop CUL with the hope of making it a valuable resource for others in the C/C++ community. I recognize the many excellent tools available and aim to learn from them while striving to contribute positively to the ecosystem. This journey is about growth, learning, and sharing knowledge within the programming community.
 
-![]("https://github.com/atrithakar/project_cul/blob/main/imgs_and_gifs/ezgif-4-5950789f63.gif")
+![](https://github.com/atrithakar/project_cul/blob/main/imgs_and_gifs/ezgif-4-5950789f63.gif)
