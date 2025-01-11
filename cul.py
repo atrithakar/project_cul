@@ -67,6 +67,7 @@ def main():
                 return
             with codecs.open(sys.argv[3], 'r', encoding='utf-16') as f:
                 lines = f.readlines()
+                
                 for line in lines:
                     install(line.strip())
         else:  # Install individual libraries
