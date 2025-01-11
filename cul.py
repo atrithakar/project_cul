@@ -36,6 +36,11 @@ def help_message():
         list                                       - Lists all installed libraries.
         freeze                                     - Outputs the installed libraries in requirements.txt format.
         help                                       - Shows the help message.
+        cache clear                                - Clears the cache of the installed libraries.
+        cache show                                 - Shows the cached modules along with their versions.
+        init                                       - Initializes the project with a module_info.json file.
+        init -y                                    - Initializes the project with a module_info.json file without asking for confirmation.
+        
 
     """
     print(help_text)
