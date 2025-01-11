@@ -40,8 +40,8 @@ def help_message():
         cache show                                 - Shows the cached modules along with their versions.
         init                                       - Initializes the project with a module_info.json file.
         init -y                                    - Initializes the project with a module_info.json file without asking for confirmation.
-        
 
+    MADE WITH ❤️ BY ATRI THAKAR
     """
     print(help_text)
 
