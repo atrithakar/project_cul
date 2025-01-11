@@ -55,6 +55,10 @@ def main():
             help_message()
             return
         elif sys.argv[2] == '-r':  # Install from a requirements file
+            if len(sys.argv) < 4:  # No requirements file specified, print error message and help message
+                print_in_red("Error: No requirements file specified for installation.")
+                help_message()
+                return
             with open(sys.argv[3], 'r') as f:
                 for line in f:
                     install(line.strip())
