@@ -5,7 +5,7 @@ import shutil
 import io
 import zipfile
 from cache_and_install import check_cache_and_install, cache_module
-from colorful_outputs import *
+from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 from init import add_requirements, remove_requirements
 from helper_functions import parse_module
