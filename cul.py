@@ -1,9 +1,9 @@
 import sys
 from colorful_outputs import print_in_red
-from cache_and_install import *
-from install_uninstall_update_module import *
-from freeze_requirements import *
-from search_module import *
+from cache_and_install import show_cache, clear_cache
+from install_uninstall_update_module import install, uninstall, update
+from freeze_requirements import freeze, list_modules
+from search_module import search_module
 from init import init
 # imports all the required functions from the various files and modules
 
