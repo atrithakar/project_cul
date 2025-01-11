@@ -1,9 +1,10 @@
 import os
 import json
 import urllib.request
+import shutil
 import io
 import zipfile
-from cache_and_install import *
+from cache_and_install import check_cache_and_install, cache_module
 from colorful_outputs import *
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 from init import add_requirements, remove_requirements
