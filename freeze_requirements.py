@@ -1,7 +1,7 @@
 from tabulate import tabulate
 import os
 import json
-from colorful_outputs import print_in_yellow
+from colorful_outputs import print_in_yellow, print_in_red
 from common_variables import C_CPP_MODULES_DLD_DIR
 
 def freeze_2(invoked_by_list_modules=False):
