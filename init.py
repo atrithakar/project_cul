@@ -19,9 +19,7 @@ def init(all_yes=False):
     '''
     if all_yes:
         name = os.getcwd().split("\\")
-        print(name)
         name = name[-1]
-        print(name)
         version = "1.0.0"
         description = ""
         author = ""
