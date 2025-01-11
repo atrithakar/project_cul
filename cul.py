@@ -65,7 +65,7 @@ def main():
                 print_in_red("Error: No requirements file specified for installation.")
                 help_message()
                 return
-            with codecs.open(sys.argv[3], 'r', encoding='utf-8') as f:
+            with codecs.open(sys.argv[3], 'r', encoding='ascii') as f:
                 lines = f.readlines()
                 for line in lines:
                     install(line.strip())
