@@ -100,6 +100,8 @@ def main():
             help_message()
         elif sys.argv[2] == 'clear': # Clear the cache
             clear_cache()
+        elif sys.argv[2] == 'show': # List the cached modules along with their versions
+            show_cache()
 
     elif command == 'init': # Initialize the cul CLI
         if len(sys.argv) > 2 and sys.argv[2] == '-y':

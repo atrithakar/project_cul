@@ -182,3 +182,31 @@ def clear_cache():
         print_in_red("Cache is already empty.")
     except Exception as e:
         print_in_red(f"Error clearing cache: {e}")
+
+def show_cache():
+    '''
+    Shows the contents of the cache directory
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If the cache directory does not exist
+        Exception: If any unexpected error occurs
+    '''
+    try:
+        cache_contents = os.path.join(CACHE_DIR, "cached.json")
+        with open(cache_contents, "r") as f:
+            cached_data = json.load(f)
+            print("Cache contents:")
+            for module, versions in cached_data.items():
+                print(f"  {module}:")
+                for version in versions:
+                    print(f"-> v{version}")
+    except FileNotFoundError:
+        print_in_red("Cache is empty.")
+    except Exception as e:
+        print_in_red(f"Error showing cache: {e}")
