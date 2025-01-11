@@ -48,6 +48,44 @@ def manage_versions_json(module_name):
     
     # print(f"versions.json for module '{module_name}' updated successfully.")
 
+def manage_cached_json(module_name, version):
+    '''
+    Manages the cached.json file in the cache directory to reflect the cached modules and versions.
+
+    Args:
+        module_name (str): The name of the module to manage/modify the cached.json file for
+        version (str): The version of the module to manage/modify the cached.json file for
+
+    Returns:
+        None
+
+    Raises:
+        Exception: If any unexpected error occurs
+    '''
+    cached_file = os.path.join(CACHE_DIR, "cached.json")
+        
+    # Load the current cached data if it exists, otherwise initialize an empty dictionary
+    if os.path.exists(cached_file):
+        with open(cached_file, "r") as f:
+            try:
+                cached_data = json.load(f)
+            except json.JSONDecodeError:
+                cached_data = {}
+    else:
+        cached_data = {}
+    
+    # Update the cached data
+    if module_name not in cached_data:
+        cached_data[module_name] = []
+    if version not in cached_data[module_name]:
+        cached_data[module_name].append(version)
+        cached_data[module_name].sort(key=lambda v: list(map(int, v.split("."))))  # Ensure versions are sorted
+    
+    # Save the updated cached data
+    with open(cached_file, "w") as f:
+        json.dump(cached_data, f, indent=4)
+
+
 def cache_module(zip_ref, module_name, version='1.0.0'):
     '''
     Cache the module along with its version in the cache directory
@@ -73,6 +111,7 @@ def cache_module(zip_ref, module_name, version='1.0.0'):
         zip_ref.extractall(cached_version_dir)
         
         manage_versions_json(module_name)
+        manage_cached_json(module_name, version)
         
         # print_in_green(f"Module '{module_name} version {version}' has been successfully cached.")
     except Exception as e:
@@ -106,12 +145,12 @@ def check_cache_and_install(module_name, version=''):
                 version = versions_data.get("latest_version")
                 # print(f"Then in try->if, {module_name}, {version}")
         cache_version_dir = os.path.join(cache_module_dir, version)
-        if os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name)):
+        # if os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name)):
             # print(f"Then in try->if, {module_name}, {version}")
-            shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
+            # shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
         if os.path.isdir(cache_version_dir):
             # print(f"Then in try->if, {module_name}, {version}")
-            shutil.copytree(cache_version_dir, os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
+            shutil.copytree(cache_version_dir, os.path.join(C_CPP_MODULES_DLD_DIR, module_name), dirs_exist_ok=True)
             print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed from cache.")
             return version
         return False
