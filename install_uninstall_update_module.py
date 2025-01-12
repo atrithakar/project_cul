@@ -188,6 +188,10 @@ def uninstall(module_name):
     Raises:
         Exception: If there is an error while uninstalling the module
     '''
+    version_exists = False
+    if("==" in module_name):
+        module_name, _ = parse_module(module_name)
+        
     module_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
     if os.path.isdir(module_path):
         try:
