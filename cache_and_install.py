@@ -1,12 +1,8 @@
 import shutil
 import os
-import appdirs
-from common_variables import C_CPP_MODULES_DLD_DIR
+from common_variables import C_CPP_MODULES_DLD_DIR, CACHE_DIR
 from colorful_outputs import print_in_green, print_in_red
 import json
-
-CACHE_DIR = appdirs.user_cache_dir("CUL", "CUL_CLI")
-
 
 def manage_versions_json(module_name):
     '''
