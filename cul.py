@@ -5,7 +5,9 @@ from install_uninstall_update_module import install, uninstall, update
 from freeze_requirements import freeze, list_modules
 from search_module import search_module
 from init import init
+from helper_functions import handle_req_file_ops
 import codecs
+import chardet
 # imports all the required functions from the various files and modules
 
 
@@ -65,11 +67,8 @@ def main():
                 print_in_red("Error: No requirements file specified for installation.")
                 help_message()
                 return
-            with codecs.open(sys.argv[3], 'r', encoding='utf-16') as f:
-                lines = f.readlines()
-                
-                for line in lines:
-                    install(line.strip())
+            handle_req_file_ops(sys.argv[3], install)
+
         else:  # Install individual libraries
             for i in range(2, len(sys.argv)):
                 install(sys.argv[i])
@@ -78,6 +77,12 @@ def main():
         if len(sys.argv) < 3: # No library specified, print error message and help message
             print_in_red("Error: No library specified for uninstallation.")
             help_message()
+        elif sys.argv[2] == '-r':  # Uninstall from a requirements file
+            if len(sys.argv) < 4:  # No requirements file specified, print error message and help message
+                print_in_red("Error: No requirements file specified for uninstallation.")
+                help_message()
+                return
+            handle_req_file_ops(sys.argv[3], uninstall)
         else: # Uninstall individual libraries
             for i in range(2, len(sys.argv)):
                 uninstall(sys.argv[i])
