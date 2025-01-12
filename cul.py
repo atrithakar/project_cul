@@ -1,7 +1,8 @@
 import sys
 from colorful_outputs import print_in_red
 from cache_and_install import show_cache, clear_cache
-from install_uninstall_update_module import install, uninstall, update
+from install_uninstall_module import install, uninstall
+from update_module import update
 from freeze_requirements import freeze, list_modules
 from search_module import search_module
 from init import init
@@ -91,6 +92,12 @@ def main():
         if len(sys.argv) < 3: # No library specified, print error message and help message
             print_in_red("Error: No library specified for updating.")
             help_message()
+        elif sys.argv[2] == '-r': # Update from a requirements file
+            if len(sys.argv) < 4: # No requirements file specified, print error message and help message
+                print_in_red("Error: No requirements file specified for updating.")
+                help_message()
+                return
+            handle_req_file_ops(sys.argv[3], update)
         else: # Update individual libraries
             for i in range(2, len(sys.argv)):
                 update(sys.argv[i])
