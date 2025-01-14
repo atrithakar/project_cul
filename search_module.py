@@ -24,24 +24,34 @@ def search_module(module_name):
     try:
         search_url = f"{BASE_URL}/versions/{module_name}"
 
+        module_data = None
         with urllib.request.urlopen(search_url) as response:
             if response.status != 200:
                 raise urllib.error.HTTPError(search_url, response.status, f"Unable to fetch versions for {module_name}.", response.getheaders(), None)
             
             module_data = response.read().decode()
-            module_info = json.loads(module_data)
-            print("Module name: ", module_name)
-            available_versions = module_info.get("versions", [])
-            latest_version = module_info.get("latest", "unknown")
-            if available_versions:
-                print("Available versions:")
-                for version in available_versions:
-                    print(f"  - {version.get('version')}")
-                print(f"Latest version: {latest_version}")
-            else:
-                print_in_yellow("No versions available.")
-            
 
+        module_info = json.loads(module_data)
+        print("Module name:", module_name)
+        available_versions = module_info.get("requires", [])
+        latest_version = module_info.get("latest", "unknown")
+
+        if not available_versions:
+            print_in_yellow("No versions available.")
+            return
+
+        print("Available versions:")
+        for version, requirements in available_versions.items():
+            print(f"  - {version}")
+            if not requirements:
+                print()
+                continue
+            print("    Requires:")
+            for req in requirements:
+                print(f"    - {req}")
+            print()
+                 
+        print("Latest version:", latest_version)
 
     except urllib.error.HTTPError as http_err:
         # Detailed HTTP error message including the status code and reason
