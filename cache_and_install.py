@@ -194,14 +194,16 @@ def show_cache():
         Exception: If any unexpected error occurs
     '''
     try:
-        cache_contents = os.path.join(CACHE_DIR, "cached.json")
-        with open(cache_contents, "r") as f:
+        cache_file_path = os.path.join(CACHE_DIR, "cached.json")
+        cached_data = {}
+        with open(cache_file_path, "r") as f:
             cached_data = json.load(f)
-            print("Cache contents:")
-            for module, versions in cached_data.items():
-                print(f"  {module}:")
-                for version in versions:
-                    print(f"-> v{version}")
+        print("Cache contents:")
+        for module, versions in cached_data.items():
+            print(f"  {module}:")
+            for version in versions:
+                print(f"    - v{version}")
+            print()
     except FileNotFoundError:
         print_in_red("Cache is empty.")
     except Exception as e:

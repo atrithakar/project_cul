@@ -27,25 +27,28 @@ def update_module(module_name):
         zip_url = f"{BASE_URL}/files/{module_name}/"
         req = urllib.request.Request(zip_url)
 
+        zip_data = None
+        module_info = None
+        version = None
+
         with urllib.request.urlopen(req) as response:
             if response.status != 200:
                 raise Exception(f"HTTP {response.status}: Unable to fetch module.")
 
             zip_data = response.read()
-            zip_stream = io.BytesIO(zip_data)
-            # print(zip_stream)
-            version = None
-            with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
-                with zip_ref.open(f"module_info.json") as f:
-                    module_info = json.load(f)
-                    version = module_info.get("version")
-                module_dir = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
-                shutil.rmtree(module_dir)
-                os.makedirs(module_dir, exist_ok=True)
-                zip_ref.extractall(module_dir)
-                print_in_green(f"Module '{module_name}' has been successfully updated.")
-                add_requirements(module_name, version)
-                cache_module(zip_ref, module_name, version)
+        zip_stream = io.BytesIO(zip_data)
+        
+        with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
+            with zip_ref.open(f"module_info.json") as f:
+                module_info = json.load(f)
+            version = module_info.get("version")
+            module_dir = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
+            shutil.rmtree(module_dir)
+            os.makedirs(module_dir, exist_ok=True)
+            zip_ref.extractall(module_dir)
+            print_in_green(f"Module '{module_name}' has been successfully updated.")
+            add_requirements(module_name, version)
+            cache_module(zip_ref, module_name, version)
     except Exception as e:
         print_in_red(f"Error: {e}")
 
