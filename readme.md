@@ -23,84 +23,129 @@ The modules are stored in a separate repository along with the code of the backe
 
 ## How to Install?
 
-1. Clone this repository:
+Note: This project was built in python 3.12, so it is recommended to use the same version for best results.
+
+1. Create a folder: [OPTIONAL]
+    ```bash
+    mkdir cul
+    ```
+2. Create a virtual environment (so that your global python configuration doesn't get messed up): [OPTIONAL]
+    ```bash
+    python -m venv cul_env
+    ```
+3. Activate the environment: [OPTIONAL]
+    ```bash
+    cul_env/Scripts/activate
+    ```
+
+4. Clone this repository:
     ```bash
     git clone https://github.com/atrithakar/project_cul
     ```
-2. Install the requirements:
+5. Install the requirements:
     ```bash
     pip install -r requirements.txt
     ```
 
-3. Install `pyinstaller`:
+6. Install the latest version of `pyinstaller`:
     ```bash
-    pip install pyinstaller
+    pip install pyinstaller --upgrade
     ```
 
-4. Compile the code using `pyinstaller`:
+7. Compile the code using `pyinstaller`:
     ```bash
     pyinstaller --onefile cul.py
     ```
 
-5. For windows, add `cul.exe` to your system's `PATH` and for linux copy `cul` to `/bin`
+8. For windows, add `cul.exe` to your system's `PATH` and for linux copy `cul` to `/bin`
+
+Note: It is recommended to create a directory named ```cul``` in a secure location where it is unlikely to be deleted accidentally. For Windows, this could be the ```C:``` drive, and for Linux, an appropriate location might be ```/opt``` or a directory under the user's home directory (e.g., ```~/cul```).
 
 ---
 
 ## How to Use?
 
-### Installing a New Header File
+### Installing a New Module:
 ```bash
-cul install header_file_name
+cul install module_name
 ```
 
-### Installing a Specific Version of a Header File
+### Installing a Specific Version of a Module:
 ```bash
-cul install header_file_name==version
+cul install module_name==version
 ```
 
-### Uninstalling an Existing Header File
+### Installing Modules From a Dependency File:
 ```bash
-cul uninstall header_file_name
+cul install -r file_name.txt
 ```
 
-### Updating a Header File
+### Uninstalling an Existing Module:
 ```bash
-cul update header_file_name
+cul uninstall module_name
 ```
 
-### Listing installed modules
+### Uninstalling Modules From a Dependency File:
+```bash
+cul uninstall -r file_name.txt
+```
+Note: This will ignore the versions specified and will uninstall based on the specified module name only. It also ignores the modules that are mentioned in the dependency file but have not been installed.
+
+### Updating a Module:
+```bash
+cul update module_name
+```
+
+### Updating Modules From a Dependency File:
+```bash
+cul update -r file_name.txt
+```
+Note: Just like the uninstall command, this will also ignore the version of the modules specified in dependency file and will update the mentioned module/s to the latest version available on the server or in the cache if there's some error while contacting the server such as server down or internet issues. This command will also ignore the modules that are mentioned in the dependency file but have not been installed.
+
+### Listing Installed Modules in Human Readable Format:
 ```bash
 cul list
 ```
 
-### Listing installed modules and storing them into a text file
+### Listing Installed Modules in Human Readable Format Into a Text File:
 ```bash
 cul list > installed_modules.txt
 ```
 
-### Listing installed requirements
+### Listing Installed Modules in Machine Readable Format:
 ```bash
 cul freeze
 ```
 
-### Listing installed requirements and storing them into a text file
+### Listing Installed Modules in Machine Readable Format Into a Text File:
 ```bash
 cul freeze > requirements.txt
 ```
 
-### Getting Help
+### Printing Help Message:
 ```bash
 cul help
 ```
-### Clearing Cache
+### Clearing Cache:
 ```bash
 cul cache clear
 ```
 
-### Initializing a project
+### Displaying Cached Modules Along With The Versions of Each Module Cached:
+```bash
+cul cache show
+```
+
+### Initializing a Project:
 ```bash
 cul init
 ```
+
+### Initializing a Project Without Any Questions Asked:
+```bash
+cul init -y
+```
+Note: This will, as expected, not ask any questions while initializing a project but will fill the values with default values specified by the developer.
 
 ---
 
