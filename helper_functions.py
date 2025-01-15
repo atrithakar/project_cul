@@ -8,26 +8,27 @@ from colorful_outputs import print_in_red
 import os
 import chardet
 
-def ensure_dir_exists(directory):
+def ensure_dir_exists(directory: str):
     if not os.path.exists(directory):
-        os.makedirs(directory)
+        os.makedirs(directory, exist_ok=True)
 
-def parse_module(module_name_str):
+def parse_module(module_name_str: str):
     return module_name_str.split("==") if "==" in module_name_str else [module_name_str, ""]
 
 def check_if_dir_exists(directory):
     return os.path.exists(directory)
 
-def handle_req_file_ops(file_path, func):
+def handle_req_file_ops(file_path: str, func: callable):
     try:
+        raw_data = None
         with open(file_path,'rb') as f:
             raw_data = f.read()
-            result = chardet.detect(raw_data)
-            content = raw_data.decode(result['encoding'])
-            for line in content.split('\n'):
-                if(line == ''):
-                    continue
-                func(line.strip())
+        result = chardet.detect(raw_data)
+        content = raw_data.decode(result['encoding'])
+        for line in content.split('\n'):
+            if(line == ''):
+                continue
+            func(line.strip())
     except FileNotFoundError:
         print_in_red(f"Error: {file_path} not found.")
     except Exception as e:
