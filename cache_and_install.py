@@ -129,23 +129,18 @@ def check_cache_and_install(module_name, version=''):
         FileNotFoundError: If the cache directory does not exist
         Exception: If any unexpected error occurs
     '''
-    # cache_filepath = os.path.join(CACHE_DIR, f"{module_name}_v{version}")
-    # print(f"First: {module_name}, {version}")
+
     cache_module_dir = os.path.join(CACHE_DIR, module_name)
-    # print(f"Then, {cache_module_dir}")
     try:
         # installed_version = None
         if version == '':
             with open(os.path.join(cache_module_dir, "versions.json"), 'r') as f:
                 versions_data = json.load(f)
                 version = versions_data.get("latest_version")
-                # print(f"Then in try->if, {module_name}, {version}")
         cache_version_dir = os.path.join(cache_module_dir, version)
         # if os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name)):
-            # print(f"Then in try->if, {module_name}, {version}")
             # shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
         if os.path.isdir(cache_version_dir):
-            # print(f"Then in try->if, {module_name}, {version}")
             shutil.copytree(cache_version_dir, os.path.join(C_CPP_MODULES_DLD_DIR, module_name), dirs_exist_ok=True)
             print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed from cache.")
             return version
