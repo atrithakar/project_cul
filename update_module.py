@@ -71,22 +71,28 @@ def update(module_name):
     
     latest_version_from_server = get_latest_version_str_from_backend(module_name)
     latest_version_from_cache = "unknown"
+    current_installed_version = get_current_installed_version(module_name)
     server_error = False
+
+    if current_installed_version == "unknown":
+        print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
+        return
+
     if latest_version_from_server == "unknown":
         print(f"Unable to fetch the latest version of {module_name} from the server, trying to fetch from cache...")
         server_error = True
         latest_version_from_cache = get_latest_version_str_from_cache(module_name)
 
-    if latest_version_from_server <= get_current_installed_version(module_name) and latest_version_from_server != "unknown":
-        print_in_yellow(f"Module '{module_name}' is already up-to-date. ")
+    if not server_error and latest_version_from_server <= current_installed_version:
+        print_in_yellow(f"Module '{module_name}' is already up-to-date with the latest version available on the server.")
         return
 
     if server_error and latest_version_from_cache == "unknown":
         print_in_red(f"Error: Unable to fetch the latest version of '{module_name} from the cache. Try again later or check the name of the module again.")
         return
 
-    if latest_version_from_cache <= get_current_installed_version(module_name):
-        print_in_yellow(f"Module '{module_name}' is already up-to-date.")
+    if latest_version_from_cache != "unknown" and latest_version_from_cache <= current_installed_version:
+        print_in_yellow(f"Module '{module_name}' is already up-to-date with the latest version available in the cache.")
         return
 
     if server_error:
@@ -94,13 +100,12 @@ def update(module_name):
             add_requirements(module_name, latest_version_from_cache)
         return
 
-    if(os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))):
-        print(f"Updating {module_name}...")
-        # fetch_module(module_name, update_called=True)
-        update_module(module_name)
-        # fetch_module(module_name)
-    else:
-        print_in_yellow(f"Warning: Library '{module_name}' not found in 'c_cpp_modules_dld'.")
+
+    print(f"Updating {module_name}...")
+    # fetch_module(module_name, update_called=True)
+    update_module(module_name)
+    # fetch_module(module_name)
+    
 
 def get_latest_version_str_from_backend(module_name):
     '''
@@ -166,7 +171,7 @@ def get_latest_version_str_from_cache(module_name):
             versions_data = json.load(f)
             return versions_data.get("latest_version", "unknown")
     except FileNotFoundError:
-        print_in_yellow(f"Warning: Module '{module_name}' not found in cache.")
+        # print_in_yellow(f"Warning: Module '{module_name}' not found in cache.")
         return "unknown"
     except json.JSONDecodeError:
         print_in_red("Error reading JSON file. It may be corrupted.")
@@ -196,7 +201,7 @@ def get_current_installed_version(module_name):
             module_info = json.load(f)
             return module_info.get("version", "unknown")
     except FileNotFoundError:
-        print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
+        # print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
         return "unknown"
     except json.JSONDecodeError:
         print_in_red("Error reading JSON file. It may be corrupted.")
