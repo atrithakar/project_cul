@@ -3,7 +3,7 @@ from colorama import Fore, init
 
 init(autoreset=True)
 
-def print_in_red(message):
+def print_in_red(message: str):
     '''
     Prints the message in red color. Used for error messages.
 
@@ -18,7 +18,7 @@ def print_in_red(message):
     '''
     print(Fore.RED + message)
 
-def print_in_yellow(text):
+def print_in_yellow(text: str):
     '''
     Prints the message in yellow color. Used for warning messages.
 
@@ -33,7 +33,7 @@ def print_in_yellow(text):
     '''
     print(Fore.YELLOW + text)
 
-def print_in_green(text):
+def print_in_green(text: str):
     '''
     Prints the message in green color. Used for success messages.
 

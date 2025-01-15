@@ -2,7 +2,7 @@ import os
 import json
 from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 
-def init(all_yes=False):
+def init(all_yes: bool = False):
     '''
     Initializes the project by creating a module_info.json file based on the user's input.
     The user will be prompted to enter the name, version, description, author, license, keywords, entry point, test command, repository type, and repository URL.
@@ -79,7 +79,7 @@ def init(all_yes=False):
     print_in_green("Project initialized successfully.")
 
 
-def add_requirements(module_name, version):
+def add_requirements(module_name: str, version: str):
     '''
     Adds the module and its version to the requirements in the module_info.json file.
 
@@ -121,7 +121,7 @@ def add_requirements(module_name, version):
     except Exception as e:
         print_in_red(f"Error adding requirements: {e}")
 
-def remove_requirements(module_name):
+def remove_requirements(module_name: str):
     '''
     Removes the module from the requirements in the module_info.json file.
 

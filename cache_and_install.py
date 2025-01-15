@@ -3,8 +3,9 @@ import os
 from common_variables import C_CPP_MODULES_DLD_DIR, CACHE_DIR
 from colorful_outputs import print_in_green, print_in_red
 import json
+import zipfile
 
-def manage_versions_json(module_name):
+def manage_versions_json(module_name: str):
     '''
     Manages the versions.json file for the specified module in the cache directory
 
@@ -44,7 +45,7 @@ def manage_versions_json(module_name):
     
     # print(f"versions.json for module '{module_name}' updated successfully.")
 
-def manage_cached_json(module_name, version):
+def manage_cached_json(module_name: str, version: str):
     '''
     Manages the cached.json file in the cache directory to reflect the cached modules and versions.
 
@@ -82,7 +83,7 @@ def manage_cached_json(module_name, version):
         json.dump(cached_data, f, indent=4)
 
 
-def cache_module(zip_ref, module_name, version='1.0.0'):
+def cache_module(zip_ref: zipfile.ZipFile, module_name: str, version: str = '1.0.0'):
     '''
     Cache the module along with its version in the cache directory
 
@@ -113,7 +114,7 @@ def cache_module(zip_ref, module_name, version='1.0.0'):
     except Exception as e:
         print_in_red(f"Error caching module: {e}")
 
-def check_cache_and_install(module_name, version=''):
+def check_cache_and_install(module_name: str, version: str = ''):
     '''
     Checks if the module of user specified version is available in the cache and installs it if found
 

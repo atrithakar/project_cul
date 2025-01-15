@@ -4,7 +4,7 @@ from common_variables import BASE_URL
 from colorful_outputs import print_in_red, print_in_yellow
 
 
-def search_module(module_name):
+def search_module(module_name: str):
     '''
     Searches if the module is available on the server and prints the available versions along with the latest version
 
@@ -50,7 +50,7 @@ def search_module(module_name):
             for req in requirements:
                 print(f"    - {req}")
             print()
-                 
+
         print("Latest version:", latest_version)
 
     except urllib.error.HTTPError as http_err:

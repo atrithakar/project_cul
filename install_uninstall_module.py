@@ -10,7 +10,7 @@ from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 from init import add_requirements, remove_requirements
 from helper_functions import parse_module
 
-def check_requirements_and_download(module_name, version='1.0.0'):
+def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
     '''
     Checks the requirements of the current module being downloaded and installs them if not already installed
 
@@ -58,7 +58,7 @@ def check_requirements_and_download(module_name, version='1.0.0'):
     except Exception as e:
         print_in_red(f"Unexpected error: {e}")
 
-def fetch_module(module_name, version=''):
+def fetch_module(module_name: str, version: str = ''):
     '''
     Downloads the module from the server and extracts it to the 'c_cpp_modules_dld' directory
 
@@ -115,7 +115,7 @@ def fetch_module(module_name, version=''):
     except Exception as e:
         print_in_red(f"Unexpected error Here: {e}")
 
-def check_already_installed(module_name, version='1.0.0'):
+def check_already_installed(module_name: str, version: str = '1.0.0'):
     '''
     Checks if the module user is trying to install is already installed or not
 
@@ -146,7 +146,7 @@ def check_already_installed(module_name, version='1.0.0'):
     else:
         return False
 
-def install(module_name):
+def install(module_name: str):
     '''
     Splits the module name and version if the user has provided the version and installs the module
 
@@ -175,7 +175,7 @@ def install(module_name):
         fetch_module(module_name)
 
 
-def uninstall(module_name):
+def uninstall(module_name: str):
     '''
     Uninstalls the module from the 'c_cpp_modules_dld' directory
 

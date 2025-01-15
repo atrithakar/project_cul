@@ -4,7 +4,7 @@ import json
 from colorful_outputs import print_in_yellow, print_in_red
 from common_variables import C_CPP_MODULES_DLD_DIR
 
-def freeze_2(invoked_by_list_modules=False):
+def freeze_2(invoked_by_list_modules: bool = False):
     '''
     SAME AS freeze() FUNCTION, BUT IT'S USED WHEN THE PROJECT IS NOT INITIALIZED AND THE USER WANTS TO LIST THE MODULES
     '''
@@ -42,7 +42,7 @@ def freeze_2(invoked_by_list_modules=False):
     else:
         print(formatted_output)
 
-def freeze(invoked_by_list_modules=False):
+def freeze(invoked_by_list_modules: bool = False):
     '''
     Prints the list of modules along with their versions
 

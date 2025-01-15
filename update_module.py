@@ -10,7 +10,7 @@ from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL, CACHE_DIR
 from init import add_requirements
 from helper_functions import parse_module
 
-def update_module(module_name):
+def update_module(module_name: str):
     '''
     Updates the module to the latest version available on the server
 
@@ -52,7 +52,7 @@ def update_module(module_name):
     except Exception as e:
         print_in_red(f"Error: {e}")
 
-def update(module_name):
+def update(module_name: str):
     '''
     Checks if the module is already installed and updates it to the latest version available on the server else gives a warning
 
@@ -107,7 +107,7 @@ def update(module_name):
     # fetch_module(module_name)
     
 
-def get_latest_version_str_from_backend(module_name):
+def get_latest_version_str_from_backend(module_name: str):
     '''
     Fetches the latest version of the module from the server
 
@@ -148,7 +148,7 @@ def get_latest_version_str_from_backend(module_name):
         print_in_red(f"Unexpected error: {e}")
     return "unknown"
 
-def get_latest_version_str_from_cache(module_name):
+def get_latest_version_str_from_cache(module_name: str):
     '''
     Fetches the latest version of the specified module available in the cache
 
@@ -180,7 +180,7 @@ def get_latest_version_str_from_cache(module_name):
         print_in_red(f"Unexpected error: {e}")
         return "unknown"
     
-def get_current_installed_version(module_name):
+def get_current_installed_version(module_name: str):
     '''
     Fetches the current installed version of the module
 
