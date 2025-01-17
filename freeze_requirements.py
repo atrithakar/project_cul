@@ -7,6 +7,19 @@ from common_variables import C_CPP_MODULES_DLD_DIR
 def freeze_2(invoked_by_list_modules: bool = False):
     '''
     SAME AS freeze() FUNCTION, BUT IT'S USED WHEN THE PROJECT IS NOT INITIALIZED AND THE USER WANTS TO LIST THE MODULES
+
+    Args:
+        invoked_by_list_modules (bool): If True, the function was invoked by list_modules() function
+
+    Returns:
+        versions: List of modules along with their versions, if invoked_by_list_modules is True
+        None: If invoked_by_list_modules is False
+
+    Raises:
+        json.JSONDecodeError: If the JSON decoding fails
+        IOError: If there is an I/O error
+        Exception: If any unexpected error occurs
+
     '''
     if not os.path.isdir(C_CPP_MODULES_DLD_DIR):
         print_in_yellow("Warning: 'c_cpp_modules_dld' directory not found.")
@@ -17,23 +30,27 @@ def freeze_2(invoked_by_list_modules: bool = False):
         return
 
     output = []
-
+    
+    # Loop through each module in the 'c_cpp_modules_dld' directory
     for module in os.listdir(C_CPP_MODULES_DLD_DIR):
         module_path = os.path.join(C_CPP_MODULES_DLD_DIR, module)
-        if not os.path.isdir(module_path):
+        if not os.path.isdir(module_path): # If module path is not a directory, append the module name with 'not_a_directory' to the output list
             output.append(f"{module}==not_a_directory")
             continue
 
         versions_file = os.path.join(module_path, "module_info.json")
-        if not os.path.isfile(versions_file):
+        if not os.path.isfile(versions_file): # If there is no 'module_info.json' file in the module path, append the module name with 'no_version_file' to the output list
             output.append(f"{module}==no_version_file")
             continue
 
         try:
+            # Open versions_file and then process the output
             with open(versions_file, 'r') as vf:
                 versions_data = json.load(vf)
                 this_version = versions_data.get("version", "unknown")
                 output.append(f"{module}=={this_version}")
+
+        # If any exception then handle it and append the module name with the error message to the output list
         except json.JSONDecodeError:
             output.append(f"{module}==error(JSONDecodeError: Invalid JSON format)")
         except IOError as e:
