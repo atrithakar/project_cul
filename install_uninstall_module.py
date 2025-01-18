@@ -22,8 +22,7 @@ def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
         None
 
     Raises:
-        HTTPError: If the server returns an unsuccessful status code
-        URLError: If the URL is invalid
+        FileNotFoundError: If the module_info.json is not found
         JSONDecodeError: If the JSON decoding fails
         KeyError: If the JSON response is missing keys
         Exception: If any unexpected error occurs
@@ -31,32 +30,39 @@ def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
     try:
         version_json_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name, 'module_info.json')
         version_info = None
+
+        # Check if the module_info.json exists
+        if not os.path.exists(version_json_path):
+            raise FileNotFoundError(f"module_info.json not found for {module_name}. Cannot check requirements.")
+
         with open(version_json_path, 'r') as f:
             version_info = json.load(f)
-        
+
+        # Get requirements from module_info.json
         requirements = version_info.get("requires", {})
         if not requirements:
             return None
-        
-        print_in_green(f"Installing requirements for {module_name}")
+
+        print_in_green(f"Installing requirements for {module_name}...")
         for module in requirements:
             module_name, version = parse_module(module)
+
+            # Install from cache or server
             if check_cache_and_install(module_name, version):
-                print_in_green(f"Module '{module}' has been successfully installed from cache.")
+                print_in_green(f"Module '{module}' successfully installed from cache.")
                 add_requirements(module_name, version)
-                continue
-            fetch_module(module_name, version)
-    
-    except urllib.error.HTTPError as http_err:
-        print_in_red(f"HTTP error: {http_err.code} {http_err.reason}")
-    except urllib.error.URLError as url_err:
-        print_in_red(f"URL error: {url_err.reason}")
-    except json.JSONDecodeError:
-        print_in_red("Failed to decode JSON response. Please check the server response.")
-    except KeyError as key_err:
-        print_in_red(f"Key error: {key_err}")
+                check_requirements_and_download(module_name, version)
+            else:
+                print(f"Installing {module} from server...")
+                fetch_module(module_name, version)
+    except FileNotFoundError as e:
+        print_in_red(f"Error: {e}")
+    except KeyError as e:
+        print_in_red(f"Error: {e}")
+    except json.JSONDecodeError as e:
+        print_in_red(f"Error: {e}")
     except Exception as e:
-        print_in_red(f"Unexpected error: {e}")
+        print_in_red(f"Unexpected error while resolving requirements for {module_name}: {e}")
 
 def fetch_module(module_name: str, version: str = ''):
     '''
@@ -105,7 +111,7 @@ def fetch_module(module_name: str, version: str = ''):
             print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed.")
             cache_module(zip_ref, module_name, version)
             add_requirements(module_name, version)
-        check_requirements_and_download(module_name, installed_version)
+        check_requirements_and_download(module_name, version)
     except urllib.error.HTTPError as e:
         error_message = e.read().decode()
         error_message = json.loads(error_message)
