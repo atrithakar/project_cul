@@ -164,7 +164,7 @@ def clear_cache():
         None
 
     Raises:
-        FileNotFoundError: If the cache directory does not exist
+        FileNotFoundError: If the cache is already empty
         Exception: If any unexpected error occurs
     '''
     try:
