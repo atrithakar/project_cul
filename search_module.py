@@ -2,6 +2,9 @@ import urllib.request
 import json
 from common_variables import BASE_URL
 from colorful_outputs import print_in_red, print_in_yellow
+from thefuzz import process
+
+# will implement fuzzy search later, cuz for that i'll have to develop a new feature.
 
 
 def search_module(module_name: str):
