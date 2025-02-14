@@ -5,5 +5,6 @@ The purpose of this file is to make it easier to manage the variables that are u
 import appdirs
 
 BASE_URL = "https://culb.vercel.app"
+# BASE_URL = "http://192.168.0.104:5000"
 C_CPP_MODULES_DLD_DIR = "./c_cpp_modules_dld"
 CACHE_DIR = appdirs.user_cache_dir("CUL", "CUL_CLI")
