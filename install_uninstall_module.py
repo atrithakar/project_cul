@@ -9,6 +9,7 @@ from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 from init import add_requirements, remove_requirements
 from helper_functions import parse_module
+from search_module import fuzzy_search_module
 
 def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
     '''
@@ -115,6 +116,14 @@ def fetch_module(module_name: str, version: str = ''):
     except urllib.error.HTTPError as e:
         error_message = e.read().decode()
         error_message = json.loads(error_message)
+        if e.code == 404:
+            print_in_yellow(f"Module '{module_name}' not found on the server but found the below matching modules. Do you want to install one of them?.")
+            modules = fuzzy_search_module(module_name)
+            i = 1
+            for module in modules:
+                print(f"{i}. {module}")
+                i += 1
+        return
         print_in_red(f"Error: {error_message.get('error')}")
     except urllib.error.URLError as e:
         print_in_red(f"Error: Unable to connect to the server. Reason: {e.reason}")
