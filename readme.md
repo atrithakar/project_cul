@@ -18,6 +18,7 @@ The modules are stored in a separate repository along with the code of the backe
 - Allows downloading different versions of modules.
 - Provides the way to initialize a project and maintain dependencies/requirements easily.
 - Installs all the required modules by the current installing module automatically
+- Users can search for a module even if they know only a part of its name.
 
 ---
 
@@ -169,9 +170,10 @@ Feel free to share feedback or report issues in the [GitHub Issues](https://gith
 
 ---
 ## A little backstory:
-During my early college days, I began learning Python after gaining experience with the C language. I often wondered why C didn't have a package management tool like Python's pip, which sparked an idea in me to create one. This project became my dream, motivated by my love for programming rather than the pursuit of fame or financial success.
+During my early college days, I began learning Python after gaining experience with the C language. I often wondered why C didn't have a package management tool like Python's pip, which sparked an idea in me to create one. This project became my dream, motivated by my love for programming rather than the pursuit of fame or financial success.  
 
-At that time, I was unaware of existing tools like vcpkg and Conan that provide package management for C/C++. Instead of feeling discouraged by their existence, I found inspiration in them to improve my own tool, CUL. Initially, my plan was to implement basic functionalities such as installing, uninstalling, updating, and providing help.
-However, as I worked on the project, my desire to enhance its capabilities grew.
+At that time, I was unaware of existing tools like vcpkg and Conan that provide package management for C/C++. Instead of feeling discouraged by their existence, I found inspiration in them to improve my own tool, CUL. Initially, my plan was to implement basic functionalities such as installing, uninstalling, updating, and providing help. However, as I worked on the project, my desire to enhance its capabilities grew.  
 
-I continue to develop CUL with the hope of making it a valuable resource for others in the C/C++ community. I recognize the many excellent tools available and aim to learn from them while striving to contribute positively to the ecosystem. This journey is about growth, learning, and sharing knowledge within the programming community.
+One particular incident during college strengthened my resolution to build CUL. A faculty member once gave our class a fun little activity and hinted that we could use `graphics.h` to complete it. Excited to experiment, I jumped in, only to find myself stuck battling linker errors for hours. The process of manually setting up external dependencies in C felt unnecessarily tedious compared to Python or other modern languages. That frustration stuck with me, and I knew there had to be a better way.  
+
+That experience, along with countless other struggles of dealing with dependencies in C/C++, reinforced my belief that a package management tool for C/C++ should exist. I continue to develop CUL with the hope of making it a valuable resource for others in the C/C++ community. I recognize the many excellent tools available and aim to learn from them while striving to contribute positively to the ecosystem. This journey is about growth, learning, and sharing knowledge within the programming community—turning past frustrations into a solution that benefits others.
