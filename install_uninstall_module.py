@@ -123,6 +123,8 @@ def fetch_module(module_name: str, version: str = ''):
             for module in modules:
                 print(f"{i}. {module}")
                 i += 1
+
+            print("Run 'cul search <module_name>' to get detailed info.")
         return
         print_in_red(f"Error: {error_message.get('error')}")
     except urllib.error.URLError as e:
