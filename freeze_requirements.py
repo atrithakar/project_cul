@@ -78,16 +78,15 @@ def freeze(invoked_by_list_modules: bool = False):
         Unexpected Error: If any unexpected error occurs
     '''
     try:
-        with open("module_info.json", 'r') as f: # open the module_info.json file in read mode
-            versions = json.load(f)['requires'] # load the json data from the file and get the 'requires' key
-            # versions = versions['requires']
+        with open("module_info.json", 'r') as f:
+            versions = json.load(f)['requires']
         if invoked_by_list_modules: 
-            return versions # return the list without processing if the function was invoked by list_modules()
-        print("\n".join(versions)) # else print the module names along with their versions
-    except FileNotFoundError as e: # file not found error will come if the project is not initialized, but we still want to list the modules
-        return freeze_2(invoked_by_list_modules) # so we call freeze_2() function to list the modules
+            return versions
+        print("\n".join(versions))
+    except FileNotFoundError as e:
+        return freeze_2(invoked_by_list_modules)
     except Exception as e:
-        print_in_red(f"Unexpected Error: {e}") # print unexpected error if any
+        print_in_red(f"Unexpected Error: {e}")
 
 def list_modules():
     '''
