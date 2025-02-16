@@ -2,7 +2,6 @@ import urllib.request
 import json
 from common_variables import BASE_URL
 from colorful_outputs import print_in_red, print_in_yellow
-
 from rapidfuzz import process
 
 def fuzzy_search_module(query, limit=5, threshold=50):
@@ -18,23 +17,34 @@ def fuzzy_search_module(query, limit=5, threshold=50):
         list: List of matching module names.
 
     Raises:
-        None
+        HTTPError: If the server returns an unsuccessful status code.
+        URLError: If the URL is invalid.
+        JSONDecodeError: If the JSON decoding fails.
+        Exception: If any unexpected error occurs.
     """
 
     module_names_url = f"{BASE_URL}/modules"
-
-    req = urllib.request.Request(module_names_url)
-
     module_names = None
-    with urllib.request.urlopen(req) as response:
-        if response.status != 200:
-            raise Exception(f"HTTP {response.status}: Unable to fetch module names.")
 
-        module_names_data = response.read().decode()
-        module_names = json.loads(module_names_data)
+    try:
+        req = urllib.request.Request(module_names_url)
+        with urllib.request.urlopen(req) as response:
+            if response.status != 200:
+                raise Exception(f"HTTP {response.status}: Unable to fetch module names.")
 
-    results = process.extract(query, module_names, limit=limit, score_cutoff=threshold)
-    return [match[0] for match in results]  # Extracting matched names
+            module_names_data = response.read().decode()
+            module_names = json.loads(module_names_data)
+
+        results = process.extract(query, module_names, limit=limit, score_cutoff=threshold)
+        return [match[0] for match in results]  # Extracting matched names
+    except urllib.error.HTTPError as e:
+        print_in_red(f"HTTP Error: {e.code} {e.reason}")
+    except urllib.error.URLError as e:
+        print_in_red(f"URL Error: {e.reason}")
+    except json.JSONDecodeError:
+        print_in_red("Failed to decode the JSON response. Please check the server response.")
+    except Exception as e:
+        print_in_red(f"Unexpected Error: {e}")
 
 def search_module(module_name: str):
     '''
@@ -68,7 +78,6 @@ def search_module(module_name: str):
 
         available_versions = module_info.get("versions", [])
         latest_version = module_info.get("latest", "Unknown")
-        latest_path = module_info.get("latest_path", "N/A")
         requirements = module_info.get("requires", {})
 
         if not available_versions:
@@ -78,10 +87,8 @@ def search_module(module_name: str):
         print("\nAvailable versions:")
         for version_entry in available_versions:
             version = version_entry.get("version", "Unknown")
-            path = version_entry.get("path", "N/A")
             print(f"  - {version}")
 
-            # Print dependencies if they exist for this version
             if not (version in requirements and requirements[version]):
                 continue
             print("    Requires:")
