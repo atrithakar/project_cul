@@ -26,7 +26,7 @@ def handle_req_file_ops(file_path: str, func: callable):
         result = chardet.detect(raw_data)
         content = raw_data.decode(result['encoding'])
         for line in content.split('\n'):
-            if(line == ''):
+            if line.isspace() or line == '':
                 continue
             func(line.strip())
     except FileNotFoundError:
