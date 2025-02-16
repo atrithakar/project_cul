@@ -18,14 +18,13 @@ def init(all_yes: bool = False):
 
     '''
     if all_yes:
-        name = os.getcwd().split("\\")
-        name = name[-1]
+        name = os.getcwd().split("\\")[-1]
         version = "1.0.0"
         description = ""
         author = ""
         license = "MIT"
         keywords = []
-        entry_point = "main.py"
+        entry_point = "main.c"
         test_command = "None"
         repo_type = "git"
         repo_url = ""
@@ -45,8 +44,8 @@ def init(all_yes: bool = False):
         keywords = [keyword.strip() for keyword in keywords.split(",")]
         entry_point = input("Enter the entry point of the project: (main.py) ")
         if entry_point == "":
-            entry_point = "main.py"
-        test_command = input("Enter the test command for the project: (python -m unittest discover) ")
+            entry_point = "main.c"
+        test_command = input("Enter the test command for the project:")
         if test_command == "":
             test_command = "None"
         repo_type = input("Enter the repository type for the project: (git) ")
