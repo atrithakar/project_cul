@@ -3,10 +3,11 @@ import os
 import json
 from colorful_outputs import print_in_yellow, print_in_red
 from common_variables import C_CPP_MODULES_DLD_DIR
+from helper_functions import parse_module
 
-def freeze_2(invoked_by_list_modules: bool = False):
+def freeze_not_initialized(invoked_by_list_modules: bool = False):
     '''
-    SAME AS freeze() FUNCTION, BUT IT'S USED WHEN THE PROJECT IS NOT INITIALIZED AND THE USER WANTS TO LIST THE MODULES
+    Prints the list of modules along with their versions if the project is not initialized
 
     Args:
         invoked_by_list_modules (bool): If True, the function was invoked by list_modules() function
@@ -31,26 +32,23 @@ def freeze_2(invoked_by_list_modules: bool = False):
 
     output = []
     
-    # Loop through each module in the 'c_cpp_modules_dld' directory
     for module in os.listdir(C_CPP_MODULES_DLD_DIR):
         module_path = os.path.join(C_CPP_MODULES_DLD_DIR, module)
-        if not os.path.isdir(module_path): # If module path is not a directory, append the module name with 'not_a_directory' to the output list
+        if not os.path.isdir(module_path):
             output.append(f"{module}==not_a_directory")
             continue
 
         versions_file = os.path.join(module_path, "module_info.json")
-        if not os.path.isfile(versions_file): # If there is no 'module_info.json' file in the module path, append the module name with 'no_version_file' to the output list
+        if not os.path.isfile(versions_file):
             output.append(f"{module}==no_version_file")
             continue
 
         try:
-            # Open versions_file and then process the output
             with open(versions_file, 'r') as vf:
                 versions_data = json.load(vf)
                 this_version = versions_data.get("version", "unknown")
                 output.append(f"{module}=={this_version}")
 
-        # If any exception then handle it and append the module name with the error message to the output list
         except json.JSONDecodeError:
             output.append(f"{module}==error(JSONDecodeError: Invalid JSON format)")
         except IOError as e:
@@ -84,7 +82,7 @@ def freeze(invoked_by_list_modules: bool = False):
             return versions
         print("\n".join(versions))
     except FileNotFoundError as e:
-        return freeze_2(invoked_by_list_modules)
+        return freeze_not_initialized(invoked_by_list_modules)
     except Exception as e:
         print_in_red(f"Unexpected Error: {e}")
 
@@ -101,6 +99,6 @@ def list_modules():
     Raises:
         None
     '''
-    output = freeze(True) # call freeze() function with True to get the list of modules along with their versions
-    table_data = [module.split("==") for module in output] # split the module name and version
-    print(tabulate(table_data, headers=["Package", "Version"], tablefmt="simple")) # tabulate the data and print it
+    output = freeze(True) # call freeze() function with True to get the list of modules along with their versions without formatting
+    table_data = [parse_module(module) for module in output]
+    print(tabulate(table_data, headers=["Package", "Version"], tablefmt="simple"))
