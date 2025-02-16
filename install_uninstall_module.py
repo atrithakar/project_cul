@@ -56,6 +56,7 @@ def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
             else:
                 print(f"Installing {module} from server...")
                 fetch_module(module_name, version)
+
     except FileNotFoundError as e:
         print_in_red(f"Error: {e}")
     except KeyError as e:
@@ -118,14 +119,14 @@ def fetch_module(module_name: str, version: str = ''):
         error_message = json.loads(error_message)
         if e.code == 404:
             print_in_yellow(f"Module '{module_name}' not found on the server but found the below matching modules. Do you want to install one of them?.")
-            modules = fuzzy_search_module(module_name)
-            i = 1
-            for module in modules:
-                print(f"{i}. {module}")
-                i += 1
 
+            modules = fuzzy_search_module(module_name)
+
+            for i, module in enumerate(modules, start=1):
+                print(f"{i}. {module}")
             print("Run 'cul search <module_name>' to get detailed info.")
-        return
+            print("Run 'cul install <module_name>' to install the module.")    
+            return
         print_in_red(f"Error: {error_message.get('error')}")
     except urllib.error.URLError as e:
         print_in_red(f"Error: Unable to connect to the server. Reason: {e.reason}")
@@ -148,19 +149,18 @@ def check_already_installed(module_name: str, version: str = '1.0.0'):
     '''
     module_exists = os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
     version_exists = False
-    if module_exists:
-        try:
-            with open(os.path.join(C_CPP_MODULES_DLD_DIR, module_name, "module_info.json"), 'r') as f:
-                module_info = json.load(f)
-                if module_info.get("version") == version:
-                    version_exists = True
-        except (json.JSONDecodeError, IOError):
-            # print(json.JSONDecodeError)
-            # print(IOError)
-            return False
-        if module_exists and version_exists:
-            return True
-    else:
+
+    if not module_exists:
+        return False
+
+    try:
+        with open(os.path.join(C_CPP_MODULES_DLD_DIR, module_name, "module_info.json"), 'r') as f:
+            module_info = json.load(f)
+            version_exists = module_info.get("version") == version
+        return module_exists and version_exists
+    except (json.JSONDecodeError, IOError):
+        # print(json.JSONDecodeError)
+        # print(IOError)
         return False
 
 def install(module_name: str):
@@ -210,12 +210,14 @@ def uninstall(module_name: str):
         module_name, _ = parse_module(module_name)
         
     module_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
-    if os.path.isdir(module_path):
-        try:
-            shutil.rmtree(module_path)
-            print_in_green(f"Successfully uninstalled {module_name}.")
-            remove_requirements(module_name)
-        except Exception as e:
-            print_in_red(f"Error uninstalling module: {e}")
-    else:
+
+    if not os.path.isdir(module_path):
         print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
+        return
+
+    try:
+        shutil.rmtree(module_path)
+        print_in_green(f"Successfully uninstalled {module_name}.")
+        remove_requirements(module_name)
+    except Exception as e:
+        print_in_red(f"Error uninstalling module: {e}")
