@@ -16,7 +16,7 @@ def manage_versions_json(module_name: str):
         None
 
     Raises:
-        Exception: If any unexpected error occurs
+        Exception: If any unexpected error occurs during dumping the versions data to the versions.json file
     '''
     module_dir = os.path.join(CACHE_DIR, module_name)
     versions_file = os.path.join(module_dir, "versions.json")
@@ -27,10 +27,9 @@ def manage_versions_json(module_name: str):
 
     versions = [folder for folder in os.listdir(module_dir) if os.path.isdir(os.path.join(module_dir, folder))]
 
-    if not versions:
-        if os.path.exists(versions_file):
-            os.remove(versions_file)
-            print(f"Deleted empty versions.json for module '{module_name}'.")
+    if not versions and os.path.exists(versions_file):
+        os.remove(versions_file)
+        print(f"Deleted empty versions.json for module '{module_name}'.")
         return
 
     versions.sort(key=lambda v: list(map(int, v.split("."))))
@@ -40,10 +39,11 @@ def manage_versions_json(module_name: str):
         "latest_version": versions[-1]
     }
 
-    with open(versions_file, "w") as f:
-        json.dump(versions_data, f, indent=4)
-    
-    # print(f"versions.json for module '{module_name}' updated successfully.")
+    try:
+        with open(versions_file, "w") as f:
+            json.dump(versions_data, f, indent=4)
+    except Exception as e:
+        print_in_red(f"Error updating versions.json for module '{module_name}': {e}")
 
 def manage_cached_json(module_name: str, version: str):
     '''
@@ -57,7 +57,7 @@ def manage_cached_json(module_name: str, version: str):
         None
 
     Raises:
-        Exception: If any unexpected error occurs
+        Exception: If any unexpected error occurs during loading the cached data from the cached.json file
     '''
     cached_file = os.path.join(CACHE_DIR, "cached.json")
         
