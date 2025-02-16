@@ -103,7 +103,6 @@ def add_requirements(module_name: str, version: str):
                 data["requires"].remove(req)
                 print(f"Removed the existing version of the module {module_name} v{req.split('==')[1]}")
 
-
         data["requires"].append(f"{module_name}=={version}")
         with open("module_info.json", "w") as f:
             json.dump(data, f, indent=4)
@@ -142,13 +141,13 @@ def remove_requirements(module_name: str):
         data["requires"] = [
             req for req in data["requires"] if req.split("==")[0] != module_name
         ]
-        if len(data["requires"]) < original_length:
-            with open("module_info.json", "w") as f:
-                json.dump(data, f, indent=4)
-            print_in_green(f"Removed '{module_name}' from the requirements.")
-        else:
+        if len(data["requires"]) >= original_length:
             print_in_yellow(f"Module '{module_name}' not found in the requirements.")
-
+            return
+        with open("module_info.json", "w") as f:
+            json.dump(data, f, indent=4)
+        print_in_green(f"Removed '{module_name}' from the requirements.")
+        
     except FileNotFoundError:
         pass
         '''
