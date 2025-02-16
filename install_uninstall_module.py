@@ -118,10 +118,13 @@ def fetch_module(module_name: str, version: str = ''):
         error_message = e.read().decode()
         error_message = json.loads(error_message)
         if e.code == 404:
-            print_in_yellow(f"Module '{module_name}' not found on the server but found the below matching modules. Do you want to install one of them?.")
+            print_in_yellow(f"Module '{module_name}'" + (f" Version '{version}'" if version else "") + " not found.")
 
             modules = fuzzy_search_module(module_name)
+            if len(modules) == 0:
+                return
 
+            print("Did you mean:")
             for i, module in enumerate(modules, start=1):
                 print(f"{i}. {module}")
             print("Run 'cul search <module_name>' to get detailed info.")
