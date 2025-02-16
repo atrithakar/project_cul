@@ -8,9 +8,35 @@ import os
 import chardet
 
 def parse_module(module_name_str: str):
+    '''
+    Parses the module name and version from the input string.
+
+    Args:
+        module_name_str (str): The input string containing the module name and version
+
+    Returns:
+        list: A list containing the module name and version
+
+    Raises:
+        None
+    '''
     return module_name_str.split("==") if "==" in module_name_str else [module_name_str, ""]
 
 def handle_req_file_ops(file_path: str, func: callable):
+    '''
+    Handles the operations on the requirements file, and executes the specified function on each line of the file, abstracting the encoding detection and file reading.
+
+    Args:
+        file_path (str): The path to the requirements file
+        func (callable): The function to be executed
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If the file is not found
+        Exception: If any unexpected error occurs
+    '''
     try:
         raw_data = None
         with open(file_path,'rb') as f:
