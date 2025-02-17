@@ -74,29 +74,33 @@ def search_module(module_name: str):
 
         module_info = json.loads(module_data)
 
-        print(f"Module: {module_name}")
+        print(f"\nModule: {module_name}")
+        print(f"Author: {module_info.get('author', 'Unknown')}")
+        print(f"Description: {module_info.get('description', 'No description available.')}")
+        print(f"License: {module_info.get('license', 'Unknown')}\n")
 
-        available_versions = module_info.get("versions", [])
-        latest_version = module_info.get("latest", "Unknown")
-        requirements = module_info.get("requires", {})
+        all_versions = module_info.get('all_versions', {})
+        versions = all_versions.get('versions', [])
+        latest_version = all_versions.get('latest', 'Unknown')
+        requires = all_versions.get('requires', {})
 
-        if not available_versions:
+        if not versions:
             print_in_yellow("No versions available.")
             return
 
-        print("\nAvailable versions:")
-        for version_entry in available_versions:
+        print("Available versions:")
+        for version_entry in versions:
             version = version_entry.get("version", "Unknown")
             print(f"  - {version}")
 
-            if not (version in requirements and requirements[version]):
+            if not requires.get(version):
                 continue
-            print("    Requires:")
-            for req in requirements[version]:
-                print(f"    - {req}")
-            print()
 
-        print(f"Latest version: {latest_version}")
+            print("    Requires:")
+            for req in requires[version]:
+                print(f"    - {req}")
+
+        print(f"\nLatest version: {latest_version}")
 
     except urllib.error.HTTPError as http_err:
         print_in_red(f"HTTP error: {http_err.code} {http_err.reason}")
@@ -112,7 +116,3 @@ def search_module(module_name: str):
 
     except Exception as e:
         print_in_red(f"Unexpected error: {e}")
-
-
-if __name__ == "__main__":
-    print(fuzzy_search_module("x"))  # Example Usage: Search for the "File Management" module
