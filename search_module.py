@@ -4,7 +4,7 @@ from common_variables import BASE_URL
 from colorful_outputs import print_in_red, print_in_yellow
 from rapidfuzz import process
 
-def fuzzy_search_module(query, limit=5, threshold=50):
+def fuzzy_search_module(query: str, limit: int = 5, threshold: int = 50, called_by_user: bool = False):
     """
     Performs fuzzy search on the given list of module names.
 
@@ -36,6 +36,11 @@ def fuzzy_search_module(query, limit=5, threshold=50):
             module_names = json.loads(module_names_data)
 
         results = process.extract(query, module_names, limit=limit, score_cutoff=threshold)
+        if called_by_user:
+            print(f"Search results for '{query}':")
+            for match in results:
+                print(f"  - {match[0]}")
+            
         return [match[0] for match in results]  # Extracting matched names
     except urllib.error.HTTPError as e:
         print_in_red(f"HTTP Error: {e.code} {e.reason}")

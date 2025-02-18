@@ -4,7 +4,7 @@ from cache_and_install import show_cache, clear_cache
 from install_uninstall_module import install, uninstall
 from update_module import update
 from freeze_requirements import freeze, list_modules
-from search_module import search_module
+from search_module import search_module, fuzzy_search_module
 from init import init
 from helper_functions import handle_req_file_ops
 from cul_help import help_message
@@ -75,6 +75,14 @@ def main():
             list_modules()
 
         case 'search':
+            if sys.argv[2] == '--fuzzy':
+                if len(sys.argv) < 4:
+                    print_in_red("Error: No library specified for searching.")
+                    help_message()
+                    return
+                fuzzy_search_module(query=sys.argv[3], called_by_user=True)
+                return
+            
             if len(sys.argv) < 3:
                 print_in_red("Error: No library specified for searching.")
                 help_message()
