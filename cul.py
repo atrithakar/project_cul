@@ -69,15 +69,27 @@ def main():
                 print_in_red("Error: No library specified for updating.")
                 help_message()
                 return
+
+            if sys.argv[-1] == "--use-reg":
+                print_in_red("Error: No registry link was provided")
+                help_message()
+                return
+
+            registry = None
+            module_end = len(sys.argv)
+            if sys.argv[-2] == "--use-reg":
+                registry = sys.argv[-1]
+                module_end -= 2
+
             if sys.argv[2] == '-r':
                 if len(sys.argv) < 4:
                     print_in_red("Error: No requirements file specified for updating.")
                     help_message()
                     return
-                handle_req_file_ops(sys.argv[3], update)
+                handle_req_file_ops(sys.argv[3], update, registry)
             else:
-                for i in range(2, len(sys.argv)):
-                    update(sys.argv[i])
+                for i in range(2, module_end):
+                    update(sys.argv[i], registry)
 
         case 'help':
             help_message()

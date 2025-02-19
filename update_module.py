@@ -10,7 +10,7 @@ from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL, CACHE_DIR
 from init import add_requirements
 from helper_functions import parse_module
 
-def update_module(module_name: str):
+def update_module(module_name: str, registry: str = BASE_URL):
     '''
     Updates the module to the latest version available on the server
 
@@ -24,7 +24,8 @@ def update_module(module_name: str):
         Exception: If there is an error while updating the module
     '''
     try:
-        zip_url = f"{BASE_URL}/files/{module_name}/"
+        registry = BASE_URL if not registry else registry
+        zip_url = f"{registry}/files/{module_name}/"
         req = urllib.request.Request(zip_url)
 
         zip_data = None
@@ -37,7 +38,7 @@ def update_module(module_name: str):
 
             zip_data = response.read()
         zip_stream = io.BytesIO(zip_data)
-        
+
         with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
             with zip_ref.open(f"module_info.json") as f:
                 module_info = json.load(f)
@@ -52,7 +53,7 @@ def update_module(module_name: str):
     except Exception as e:
         print_in_red(f"Error: {e}")
 
-def update(module_name: str):
+def update(module_name: str, registry: str = BASE_URL):
     '''
     Checks if the module is already installed and updates it to the latest version available on the server else gives a warning
 
@@ -69,7 +70,8 @@ def update(module_name: str):
     if "==" in module_name:
         module_name, _ = parse_module(module_name)
     
-    latest_version_from_server = get_latest_version_str_from_backend(module_name)
+    registry = BASE_URL if not registry else registry
+    latest_version_from_server = get_latest_version_str_from_backend(module_name, registry)
     latest_version_from_cache = "unknown"
     current_installed_version = get_current_installed_version(module_name)
     server_error = False
@@ -103,11 +105,11 @@ def update(module_name: str):
 
     print(f"Updating {module_name}...")
     # fetch_module(module_name, update_called=True)
-    update_module(module_name)
+    update_module(module_name, registry=registry)
     # fetch_module(module_name)
     
 
-def get_latest_version_str_from_backend(module_name: str):
+def get_latest_version_str_from_backend(module_name: str, registry: str = BASE_URL):
     '''
     Fetches the latest version of the module from the server
 
@@ -125,7 +127,8 @@ def get_latest_version_str_from_backend(module_name: str):
         Exception: If any unexpected error occurs
     '''
     try:
-        with urllib.request.urlopen(f"{BASE_URL}/latest_version/{module_name}") as response:
+        registry = BASE_URL if not registry else registry
+        with urllib.request.urlopen(f"{registry}/latest_version/{module_name}") as response:
             if response.status != 200:
                 raise urllib.error.HTTPError(f"{BASE_URL}/latest", response.status, f"Unable to fetch the latest version.", response.getheaders(), None)
             
