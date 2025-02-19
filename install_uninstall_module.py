@@ -66,7 +66,7 @@ def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
     except Exception as e:
         print_in_red(f"Unexpected error while resolving requirements for {module_name}: {e}")
 
-def fetch_module(module_name: str, version: str = ''):
+def fetch_module(module_name: str, version: str = '', registry: str = BASE_URL):
     '''
     Downloads the module from the server and extracts it to the 'c_cpp_modules_dld' directory
 
@@ -89,7 +89,7 @@ def fetch_module(module_name: str, version: str = ''):
         return
     
     try:
-        zip_url = f"{BASE_URL}/files/{module_name}/{version}"
+        zip_url = f"{registry}/files/{module_name}/{version}"
         
         req = urllib.request.Request(zip_url)
         # try:
@@ -120,7 +120,7 @@ def fetch_module(module_name: str, version: str = ''):
         if e.code == 404:
             print_in_yellow(f"Module '{module_name}'" + (f" Version '{version}'" if version else "") + " not found.")
 
-            modules = fuzzy_search_module(module_name)
+            modules = fuzzy_search_module(module_name, registry=registry)
             if len(modules) == 0:
                 return
 
@@ -133,6 +133,8 @@ def fetch_module(module_name: str, version: str = ''):
         print_in_red(f"Error: {error_message.get('error')}")
     except urllib.error.URLError as e:
         print_in_red(f"Error: Unable to connect to the server. Reason: {e.reason}")
+    except json.JSONDecodeError as e:
+        print_in_red(f"Error: {e}")
     except Exception as e:
         print_in_red(f"Unexpected error Here: {e}")
 
@@ -166,7 +168,7 @@ def check_already_installed(module_name: str, version: str = '1.0.0'):
         # print(IOError)
         return False
 
-def install(module_name: str):
+def install(module_name: str, registry: str = BASE_URL):
     '''
     Splits the module name and version if the user has provided the version and installs the module
 
@@ -179,6 +181,7 @@ def install(module_name: str):
     Raises:
         None
     '''
+    registry = BASE_URL if not registry else registry
     module_name_, version = parse_module(module_name)
     if version:
         if check_already_installed(module_name_, version):
@@ -186,13 +189,13 @@ def install(module_name: str):
             return
 
         print(f"Installing {module_name_} Version {version}...")
-        fetch_module(module_name_, version)
+        fetch_module(module_name_, version, registry)
     else:
         if check_already_installed(module_name):
             print_in_yellow(f"Module '{module_name}' is already installed.")
             return
 
-        fetch_module(module_name)
+        fetch_module(module_name=module_name, registry=registry)
 
 
 def uninstall(module_name: str):

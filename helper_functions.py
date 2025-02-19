@@ -22,7 +22,7 @@ def parse_module(module_name_str: str):
     '''
     return module_name_str.split("==") if "==" in module_name_str else [module_name_str, ""]
 
-def handle_req_file_ops(file_path: str, func: callable):
+def handle_req_file_ops(file_path: str, func: callable, registry: str = None):
     '''
     Handles the operations on the requirements file, and executes the specified function on each line of the file, abstracting the encoding detection and file reading.
 
@@ -43,10 +43,18 @@ def handle_req_file_ops(file_path: str, func: callable):
             raw_data = f.read()
         result = chardet.detect(raw_data)
         content = raw_data.decode(result['encoding'])
+        if registry and (func.__name__ == 'install' or func.__name__ == 'update'):
+            for line in content.split('\n'):
+                if line.isspace() or line == '':
+                    continue
+                func(line.strip(), registry)
+            return
+            
         for line in content.split('\n'):
-            if line.isspace() or line == '':
-                continue
-            func(line.strip())
+                if line.isspace() or line == '':
+                    continue
+                func(line.strip())
+        
     except FileNotFoundError:
         print_in_red(f"Error: {file_path} not found.")
     except Exception as e:

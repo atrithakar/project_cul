@@ -4,7 +4,7 @@ from common_variables import BASE_URL
 from colorful_outputs import print_in_red, print_in_yellow
 from rapidfuzz import process
 
-def fuzzy_search_module(query: str, limit: int = 5, threshold: int = 50, called_by_user: bool = False):
+def fuzzy_search_module(query: str, limit: int = 5, threshold: int = 50, called_by_user: bool = False, registry: str = BASE_URL):
     """
     Performs fuzzy search on the given list of module names.
 
@@ -23,7 +23,8 @@ def fuzzy_search_module(query: str, limit: int = 5, threshold: int = 50, called_
         Exception: If any unexpected error occurs.
     """
 
-    module_names_url = f"{BASE_URL}/modules"
+    registry = BASE_URL if not registry else registry
+    module_names_url = f"{registry}/modules"
     module_names = None
 
     try:
@@ -51,7 +52,7 @@ def fuzzy_search_module(query: str, limit: int = 5, threshold: int = 50, called_
     except Exception as e:
         print_in_red(f"Unexpected Error: {e}")
 
-def search_module(module_name: str):
+def search_module(module_name: str, registry: str = BASE_URL):
     '''
     Searches if the module is available on the server and prints the available versions along with the latest version.
 
@@ -68,8 +69,9 @@ def search_module(module_name: str):
         KeyError: If the JSON response is missing keys
         Exception: If any unexpected error occurs
     '''
+    registry = BASE_URL if not registry else registry
     try:
-        search_url = f"{BASE_URL}/versions/{module_name}"
+        search_url = f"{registry}/versions/{module_name}"
 
         with urllib.request.urlopen(search_url) as response:
             if response.status != 200:

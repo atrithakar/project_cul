@@ -25,15 +25,29 @@ def main():
                 print_in_red("Error: No library specified for installation.")
                 help_message()
                 return
+
+            if sys.argv[-1] == "--use-reg":
+                print_in_red("Error: No registry link was provided")
+                help_message()
+                return
+
+            registry = None
+            module_end = len(sys.argv)
+
+            # Handle '--use-reg'
+            if sys.argv[-2] == "--use-reg":
+                registry = sys.argv[-1]
+                module_end -= 2
+
             if sys.argv[2] == '-r':
                 if len(sys.argv) < 4:
                     print_in_red("Error: No requirements file specified for installation.")
                     help_message()
                     return
-                handle_req_file_ops(sys.argv[3], install)
+                handle_req_file_ops(sys.argv[3], install, registry)
             else:
-                for i in range(2, len(sys.argv)):
-                    install(sys.argv[i])
+                for i in range(2, module_end):
+                    install(sys.argv[i], registry)
 
         case 'uninstall':
             if len(sys.argv) < 3:
@@ -75,19 +89,28 @@ def main():
             list_modules()
 
         case 'search':
+            if sys.argv[-1] == "--use-reg":
+                print_in_red("Error: No registry link was provided")
+                help_message()
+                return
+
+            registry = ''
+            if sys.argv[-2] == '--use-reg':
+                registry = sys.argv[-1]
+
             if sys.argv[2] == '--fuzzy':
                 if len(sys.argv) < 4:
                     print_in_red("Error: No library specified for searching.")
                     help_message()
                     return
-                fuzzy_search_module(query=sys.argv[3], called_by_user=True)
+                fuzzy_search_module(query=sys.argv[3], called_by_user=True, registry=registry)
                 return
             
             if len(sys.argv) < 3:
                 print_in_red("Error: No library specified for searching.")
                 help_message()
                 return
-            search_module(sys.argv[2])
+            search_module(sys.argv[2], registry)
 
         case 'cache':
             if len(sys.argv) < 3:
