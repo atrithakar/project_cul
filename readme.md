@@ -6,6 +6,8 @@ CUL is a command-line utility for the C/C++ programming language that simplifies
 
 Inspired by Python's pip and NodeJS's npm, the goal of CUL is to provide an efficient and user-friendly way to manage project-specific header files, making them easier to download, update, and organize.
 
+CUL is not just a **standalone project**—it is **a part of a larger vision** to create a **complete ecosystem** for **C/C++ development.** Once CUL reaches a stable state with all planned features, the next phase will begin: building a modular ecosystem that enhances the way developers manage dependencies, build projects, and streamline development in C/C++.
+
 The modules are stored in a separate repository along with the code of the backend file server, which can be accessed here: [CUL Backend](https://github.com/atrithakar/cul_backend).
 
 ---
@@ -17,14 +19,15 @@ The modules are stored in a separate repository along with the code of the backe
 - Provides a way to list all the modules installed, both in human readable way and machine readable way, and store them into a .txt file.
 - Allows downloading different versions of modules.
 - Provides the way to initialize a project and maintain dependencies/requirements easily.
-- Installs all the required modules by the current installing module automatically
+- Installs all the required modules by the current installing module automatically.
 - Users can search for a module even if they know only a part of its name.
+- Automatically logs warnings and errors in a .cul folder inside the project folder for ease of access.
 
 ---
 
 ## How to Install?
 
-Note: This project was built in python 3.12, so it is recommended to use the same version for best results.
+Note: This project was built in python 3.12, so it is recommended to use the same version for the best results.
 
 1. Create a folder: [OPTIONAL]
     ```bash
@@ -91,6 +94,18 @@ cul uninstall module_name
 cul uninstall -r file_name.txt
 ```
 Note: This will ignore the versions specified and will uninstall based on the specified module name only. It also ignores the modules that are mentioned in the dependency file but have not been installed.
+
+### Searching For a Module:
+```bash
+cul search module_name
+```
+Note: This will search for `module_name` on the server and returns ONLY if the exact match is found, else gives a 404 error.
+
+### Searching For a Module Without Knowing the Exact Name:
+```bash
+cul search --fuzzy module_name
+```
+Note: Finds and lists all modules with names similar to `module_name`.
 
 ### Updating a Module:
 ```bash
@@ -166,7 +181,7 @@ If you have the skills and passion to improve this tool, feel free to contribute
 
 Thank you for contributing to CUL and making it better!
 
-Feel free to share feedback or report issues in the [GitHub Issues](https://github.com/atrithakar/project_cul/issues) section. Let's make C/C++ library management hassle-free together!
+Feel free to share feedback or report issues in the [GitHub Issues](https://github.com/atrithakar/project_cul/issues) section. Let's make C/C++ module management hassle-free together!
 
 ---
 ## A little backstory:
