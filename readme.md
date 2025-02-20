@@ -22,6 +22,7 @@ The modules are stored in a separate repository along with the code of the backe
 - Installs all the required modules by the current installing module automatically.
 - Users can search for a module even if they know only a part of its name.
 - Automatically logs warnings and errors in a .cul folder inside the project folder for ease of access.
+- Modules can be downloaded from various registries hosted and maintained by independent individuals or organizations.
 
 ---
 
@@ -84,6 +85,11 @@ cul install module_name==version
 cul install -r file_name.txt
 ```
 
+### Installing Module From a Different Registry:
+```bash
+cul install module_name --use-reg registry_link
+```
+
 ### Uninstalling an Existing Module:
 ```bash
 cul uninstall module_name
@@ -117,6 +123,11 @@ cul update module_name
 cul update -r file_name.txt
 ```
 Note: Just like the uninstall command, this will also ignore the version of the modules specified in dependency file and will update the mentioned module/s to the latest version available on the server or in the cache if there's some error while contacting the server such as server down or internet issues. This command will also ignore the modules that are mentioned in the dependency file but have not been installed.
+
+### Updating Module From Different Registry:
+```bash
+cul update module_name --use-reg registry_link
+```
 
 ### Listing Installed Modules in Human Readable Format:
 ```bash
