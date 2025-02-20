@@ -26,18 +26,18 @@ def main():
                 help_message()
                 return
 
-            if sys.argv[-1] == "--use-reg":
-                print_in_red("Error: No registry link was provided")
-                help_message()
-                return
-
             registry = None
             module_end = len(sys.argv)
 
-            # Handle '--use-reg'
-            if sys.argv[-2] == "--use-reg":
-                registry = sys.argv[-1]
-                module_end -= 2
+            if '--use-reg' in sys.argv:
+                reg_index = sys.argv.index('--use-reg')
+                if reg_index + 1 >= len(sys.argv):
+                    print_in_red("Error: No registry link was provided")
+                    help_message()
+                    return
+                
+                registry = sys.argv[reg_index + 1]
+                module_end = reg_index
 
             if sys.argv[2] == '-r':
                 if len(sys.argv) < 4:
@@ -70,20 +70,22 @@ def main():
                 help_message()
                 return
 
-            if sys.argv[-1] == "--use-reg":
-                print_in_red("Error: No registry link was provided")
-                help_message()
-                return
-
             registry = None
             module_end = len(sys.argv)
-            if sys.argv[-2] == "--use-reg":
-                registry = sys.argv[-1]
-                module_end -= 2
+
+            if '--use-reg' in sys.argv:
+                reg_index = sys.argv.index('--use-reg')
+                if reg_index + 1 >= len(sys.argv):
+                    print_in_red("Error: No registry link was provided")
+                    help_message()
+                    return
+                
+                registry = sys.argv[reg_index + 1]
+                module_end = reg_index
 
             if sys.argv[2] == '-r':
                 if len(sys.argv) < 4:
-                    print_in_red("Error: No requirements file specified for updating.")
+                    print_in_red("Error: No requirements file specified for installation.")
                     help_message()
                     return
                 handle_req_file_ops(sys.argv[3], update, registry)
