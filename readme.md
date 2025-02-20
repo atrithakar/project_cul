@@ -87,8 +87,9 @@ cul install -r file_name.txt
 
 ### Installing Module From a Different Registry:
 ```bash
-cul install module_name --use-reg registry_link
+cul install module_name --use-reg "registry_url"
 ```
+NOTE: registry_url must be enclosed in double and single quotes and must contain the protocol (http/https).
 
 ### Uninstalling an Existing Module:
 ```bash
@@ -126,8 +127,9 @@ Note: Just like the uninstall command, this will also ignore the version of the 
 
 ### Updating Module From Different Registry:
 ```bash
-cul update module_name --use-reg registry_link
+cul update module_name --use-reg "registry_url"
 ```
+NOTE: registry_url must be enclosed in double and single quotes and must contain the protocol (http/https).
 
 ### Listing Installed Modules in Human Readable Format:
 ```bash
