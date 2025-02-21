@@ -27,7 +27,7 @@ def print_in_red(text: str):
         file_size_in_MB = os.path.getsize(os.path.join(CUL_DIR, "errors.log")) / (1024 * 1024)
         # file_size = os.path.getsize(os.path.join(CUL_DIR, "errors.log")) # used for testing and debugging
 
-        if file_size_in_MB >= 10:
+        if file_size_in_MB >= 5:
             with open (os.path.join(CUL_DIR, "errors.log"), 'w') as f:
                 f.write("")
 
@@ -65,7 +65,7 @@ def print_in_yellow(text: str):
         file_size_in_MB = os.path.getsize(os.path.join(CUL_DIR, "warnings.log")) / (1024 * 1024)
         # file_size = os.path.getsize(os.path.join(CUL_DIR, "warnings.log")) # used for testing and debugging
 
-        if file_size_in_MB >= 10:
+        if file_size_in_MB >= 5:
             with open (os.path.join(CUL_DIR, "warnings.log"), 'w') as f:
                 f.write("")
 
