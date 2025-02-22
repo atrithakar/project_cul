@@ -6,6 +6,13 @@ from datetime import datetime
 
 init(autoreset=True)
 
+def simple_print_in_red(text: str):
+    '''
+    Prints the message in red and does not write it to the errors.log file.
+    It is used when print_in_red() generates an error and to prevent infinite recursion.
+    '''
+    print(Fore.RED + text)
+
 def print_in_red(text: str):
     '''
     Prints the message in red color and writes it to the errors.log file in the CUL_DIR directory.
@@ -42,7 +49,7 @@ def print_in_red(text: str):
             f.write(f"[{timestamp}]: {text}\n")
 
     except Exception as e:
-        print_in_red(f"Unexpected error: {e}")
+        simple_print_in_red(f"Unexpected error: {e}")
 
 def print_in_yellow(text: str):
     '''
