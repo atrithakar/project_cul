@@ -21,6 +21,9 @@ def update_module(module_name: str, registry: str = BASE_URL):
         None
 
     Raises:
+        HTTPError: If the server returns an unsuccessful status code
+        URLError: If the URL is invalid
+        JSONDecodeError: If the JSON decoding fails
         Exception: If there is an error while updating the module
     '''
     try:
@@ -50,8 +53,14 @@ def update_module(module_name: str, registry: str = BASE_URL):
             print_in_green(f"Module '{module_name}' has been successfully updated.")
             add_requirements(module_name, version)
             cache_module(zip_ref, module_name, version)
+    except urllib.error.HTTPError as http_err:
+        print_in_red(f"HTTP error: {http_err.code} {http_err.reason}")
+    except urllib.error.URLError as url_err:
+        print_in_red(f"URL error: {url_err.reason}")
+    except json.JSONDecodeError:
+        print_in_red("Failed to decode the JSON response. Please check the server response.")
     except Exception as e:
-        print_in_red(f"Error: {e}")
+        print_in_red(f"Unexpected Error: {e}")
 
 def update(module_name: str, registry: str = BASE_URL):
     '''
@@ -102,12 +111,9 @@ def update(module_name: str, registry: str = BASE_URL):
             add_requirements(module_name, latest_version_from_cache)
         return
 
-
     print(f"Updating {module_name}...")
-    # fetch_module(module_name, update_called=True)
+
     update_module(module_name, registry=registry)
-    # fetch_module(module_name)
-    
 
 def get_latest_version_str_from_backend(module_name: str, registry: str = BASE_URL):
     '''
