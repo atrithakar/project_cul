@@ -94,7 +94,11 @@ def main():
                     update(sys.argv[i], registry)
 
         case 'help':
-            help_message()
+            if len(sys.argv) < 3:
+                help_message()
+                return
+
+            help_message(sys.argv[2])
 
         case 'freeze':
             freeze()
