@@ -155,6 +155,12 @@ cul freeze > requirements.txt
 ```bash
 cul help
 ```
+
+### Printing Help Message For Specific Command:
+```bash
+cul help command_name
+```
+
 ### Clearing Cache:
 ```bash
 cul cache clear
