@@ -10,6 +10,31 @@ CUL is not just a **standalone project**—it is **a part of a larger vision** t
 
 The modules are stored in a separate repository along with the code of the backend file server, which can be accessed here: [CUL Backend](https://github.com/atrithakar/cul_backend).
 
+## Why Choose CUL Over Other Package Managers?
+Most C/C++ package managers are **either too complex or too limited**. **CUL is here to change that!**  
+CUL is **built for developers, by a developer** to make C/C++ package management as **easy as Python’s pip or JavaScript’s npm!** 🚀
+<br>Here's how CUL compares to other well-known C/C++ package managers. This comparison reflects CUL's current capabilities, not future planned features.
+
+| **Feature**                    | **CUL 🚀** | **Conan 🏗️** | **vcpkg 🏢** | **Hunter 🏹** | **Spack 🔬** |
+|---------------------------------|------------|--------------|--------------|--------------|--------------|
+| **Ease of Use 🏆**              | ✅ Intuitive CLI (pip/npm-like) | 🟡 Moderate learning curve | ✅ Easy, Visual Studio-friendly | 🟡 Moderate, CMake-centric | ❌ Complex, HPC-focused |
+| **Platform Support 💻**         | ✅ Cross-platform | ✅ Cross-platform | ✅ Cross-platform | ✅ Cross-platform | ✅ Cross-platform |
+| **Repository Size 📚**          | 🆕 Growing | 📦 Large | 📦 Large (Microsoft) | 📦 Moderate | 🏢 Extensive (scientific) |
+| **Build System Independence 🏗️❌** | ✅ Works standalone | ❌ Requires CMake | ❌ Requires MSBuild/CMake | ❌ CMake-focused | ❌ Complex build scripts |
+| **Versioning Support 🔢**       | ✅ Available | ✅ Yes | ⚠️ Limited | ✅ Yes | ✅ Yes |
+| **Dependency Resolution 🔄**    | ✅ Automatic | 🔥 Advanced | ⚠️ Basic | ⚠️ Manual setup | 🔥 Advanced |
+| **Caching Mechanism 📀**        | ✅ Yes | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
+| **Custom Repositories 🌍**      | ✅ Multi-registry | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
+| **Fuzzy Search 🔍**             | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Community Support 🤝**        | 🚀 Emerging | 💬 Active | 🏢 Microsoft-backed | 💬 Small but active | 🔬 Research-focused |
+| **Documentation 📖**            | ✍️ Comprehensive, evolving | 📜 Extensive | 📜 Detailed | 📜 Moderate | 📜 Extensive |
+| **Binary Packages 📦**          | ⏳ Planned | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes |
+| **Security 🔒**                 | ⏳ Planned | ✅ Yes | ⚠️ Basic | ⚠️ Basic | 🔥 Advanced |
+| **Offline Installation ✈️**     | ✅ Supported via caching | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
+| **Lightweight ⚡**               | ✅ Yes | ❌ Heavy | ❌ Bloated | ✅ Yes | ❌ Complex setup |
+| **Error Logging 📜** | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No |
+| **Learning Curve 📈**           | ⭐ Gentle, beginner-friendly | 📉 Moderate | ⭐ Easy | 📉 Moderate | 📉 Steep |
+
 ---
 ## Features:
 - Provides minimalistic UI.
