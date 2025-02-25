@@ -1,5 +1,16 @@
 # CUL
 
+## Table of Contents
+⁃ [What is CUL?](#what-is-cul)<br>
+⁃ [Why Choose CUL Over Other Package Managers?](#why-choose-cul-over-other-package-managers)<br>
+⁃ [Features](#features)<br>
+⁃ [How to Install?](#how-to-install)<br>
+⁃ [How to Use?](#how-to-use)<br>
+⁃ [How to Contribute?](#how-to-contribute)<br>
+⁃ [A Little Backstory](#a-little-backstory)<br>
+
+---
+
 ## What is CUL?
 
 CUL is a command-line utility for the C/C++ programming language that simplifies the downloading and management of external modules (header files).  
@@ -53,13 +64,13 @@ CUL is **built for developers, by a developer** to make C/C++ package management
 
 ## How to Install?
 
-Installation Guide: [Click Here](MDs/installation_guide.md)
+Installation Guide: [Click Here](https://github.com/atrithakar/project_cul/blob/main/MDs/installation_guide.md)
 
 ---
 
 ## How to Use?
 
-User Manual: [Click Here](MDs/user_manual.md)
+User Manual: [Click Here](https://github.com/atrithakar/project_cul/blob/main/MDs/user_manual.md)
 
 ---
 
