@@ -1,7 +1,7 @@
 import shutil
 import os
 from common_variables import C_CPP_MODULES_DLD_DIR, CACHE_DIR
-from colorful_outputs import print_in_green, print_in_red
+from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 import json
 import zipfile
 
@@ -171,7 +171,7 @@ def clear_cache():
         shutil.rmtree(CACHE_DIR)
         print_in_green("Cache cleared successfully.")
     except FileNotFoundError:
-        print_in_red("Cache is already empty.")
+        print_in_yellow("Warning: Cache is already empty.")
     except Exception as e:
         print_in_red(f"Error clearing cache: {e}")
 
@@ -201,6 +201,6 @@ def show_cache():
                 print(f"    - v{version}")
             print()
     except FileNotFoundError:
-        print_in_red("Cache is empty.")
+        print("Cache is empty.")
     except Exception as e:
         print_in_red(f"Error showing cache: {e}")
