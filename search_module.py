@@ -92,7 +92,7 @@ def search_module(module_name: str, registry: str = BASE_URL):
         requires = all_versions.get('requires', {})
 
         if not versions:
-            print_in_yellow("No versions available.")
+            print("No versions available.")
             return
 
         print("Available versions:")
