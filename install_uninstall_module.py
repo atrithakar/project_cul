@@ -44,7 +44,7 @@ def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
         if not requirements:
             return None
 
-        print_in_green(f"Installing requirements for {module_name}...")
+        print(f"Installing requirements for {module_name}...")
         for module in requirements:
             module_name, version = parse_module(module)
 
