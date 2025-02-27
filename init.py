@@ -106,7 +106,7 @@ def add_requirements(module_name: str, version: str):
         data["requires"].append(f"{module_name}=={version}")
         with open("module_info.json", "w") as f:
             json.dump(data, f, indent=4)
-        print_in_green(f"Added '{module_name}=={version}' to the requirements.")
+        print(f"Added '{module_name}=={version}' to the requirements.")
     except FileNotFoundError as e:
         # print_in_yellow("Warning: Project not initialized. Please run 'cul init' to initialize the project.")
         pass
@@ -146,7 +146,7 @@ def remove_requirements(module_name: str):
             return
         with open("module_info.json", "w") as f:
             json.dump(data, f, indent=4)
-        print_in_green(f"Removed '{module_name}' from the requirements.")
+        print(f"Removed '{module_name}' from the requirements.")
         
     except FileNotFoundError:
         pass
