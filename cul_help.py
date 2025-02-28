@@ -138,8 +138,7 @@ def help_message(func_help: str = None):
         if func_name in globals():
             globals()[func_name]()
             return
+
         print(f"Help message for '{func_help}' not found.")
-        print(help_text)
-        return
 
     print(help_text)
