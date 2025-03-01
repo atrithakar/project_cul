@@ -61,16 +61,15 @@ def manage_cached_json(module_name: str, version: str):
         JSONDecodeError: If the JSON decoding fails while reading the cached.json file
     '''
     cached_file = os.path.join(CACHE_DIR, "cached.json")
+    cached_data = {}
         
     if os.path.exists(cached_file):
         with open(cached_file, "r") as f:
             try:
                 cached_data = json.load(f)
             except json.JSONDecodeError:
-                cached_data = {}
-    else:
-        cached_data = {}
-    
+                print_in_red("Error reading cached.json file. It may be corrupted.")
+
     if module_name not in cached_data:
         cached_data[module_name] = []
     if version not in cached_data[module_name]:
