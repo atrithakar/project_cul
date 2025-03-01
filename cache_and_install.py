@@ -57,11 +57,11 @@ def manage_cached_json(module_name: str, version: str):
         None
 
     Raises:
-        Exception: If any unexpected error occurs during loading the cached data from the cached.json file
+        Exception: If any unexpected error occurs during updating the cached.json file
+        JSONDecodeError: If the JSON decoding fails while reading the cached.json file
     '''
     cached_file = os.path.join(CACHE_DIR, "cached.json")
         
-    # Load the current cached data if it exists, otherwise initialize an empty dictionary
     if os.path.exists(cached_file):
         with open(cached_file, "r") as f:
             try:
@@ -71,16 +71,17 @@ def manage_cached_json(module_name: str, version: str):
     else:
         cached_data = {}
     
-    # Update the cached data
     if module_name not in cached_data:
         cached_data[module_name] = []
     if version not in cached_data[module_name]:
         cached_data[module_name].append(version)
-        cached_data[module_name].sort(key=lambda v: list(map(int, v.split("."))))  # Ensure versions are sorted
+        cached_data[module_name].sort(key=lambda v: list(map(int, v.split("."))))
     
-    # Save the updated cached data
-    with open(cached_file, "w") as f:
-        json.dump(cached_data, f, indent=4)
+    try:
+        with open(cached_file, "w") as f:
+            json.dump(cached_data, f, indent=4)
+    except Exception as e:
+        print_in_red(f"Error updating cached.json: {e}")
 
 
 def cache_module(zip_ref: zipfile.ZipFile, module_name: str, version: str = '1.0.0'):
