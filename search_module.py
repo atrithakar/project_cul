@@ -24,7 +24,7 @@ def fuzzy_search_module(query: str, limit: int = 5, threshold: int = 50, called_
     """
 
     registry = BASE_URL if not registry else registry
-    module_names_url = f"{registry}/modules"
+    module_names_url = f"{registry}/get_modules"
     module_names = None
 
     try:
@@ -71,7 +71,7 @@ def search_module(module_name: str, registry: str = BASE_URL):
     '''
     registry = BASE_URL if not registry else registry
     try:
-        search_url = f"{registry}/versions/{module_name}"
+        search_url = f"{registry}/get_versions/{module_name}"
 
         with urllib.request.urlopen(search_url) as response:
             if response.status != 200:

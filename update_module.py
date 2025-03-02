@@ -134,7 +134,7 @@ def get_latest_version_str_from_backend(module_name: str, registry: str = BASE_U
     '''
     try:
         registry = BASE_URL if not registry else registry
-        with urllib.request.urlopen(f"{registry}/latest_version/{module_name}") as response:
+        with urllib.request.urlopen(f"{registry}/get_latest_version/{module_name}") as response:
             if response.status != 200:
                 raise urllib.error.HTTPError(f"{BASE_URL}/latest", response.status, f"Unable to fetch the latest version.", response.getheaders(), None)
             
