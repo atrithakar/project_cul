@@ -38,6 +38,10 @@ def fuzzy_search_module(query: str, limit: int = 5, threshold: int = 50, called_
 
         results = process.extract(query, module_names, limit=limit, score_cutoff=threshold)
         if called_by_user:
+            if not results:
+                print_in_yellow(f"No results found for '{query}'")
+                return
+
             print(f"Search results for '{query}':")
             for match in results:
                 print(f"  - {match[0]}")
