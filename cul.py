@@ -8,8 +8,7 @@ from search_module import search_module, fuzzy_search_module
 from init import init
 from helper_functions import handle_req_file_ops
 from cul_help import help_message
-import codecs
-import chardet
+from change_registry import change_reg
 
 def main():
     # Check if the user has provided a command
@@ -146,6 +145,13 @@ def main():
 
         case 'init':
             init(True if len(sys.argv) > 2 and sys.argv[2] == '-y' else False)
+
+        case 'set-reg':
+            if len(sys.argv) < 3:
+                print_in_red("Error: No registry link was provided")
+                help_message()
+                return
+            change_reg(sys.argv[2])
 
         case _:
             print_in_red(f"Unknown command: {command}")

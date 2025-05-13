@@ -71,6 +71,14 @@ def help_help():
     """
     print(help_text)
 
+def set_reg_help():
+    help_text = """
+    set-reg link    - Changes the registry link in the configuration file to the link inputted by the user.
+    set-reg default - Resets the registry link to the default registry link.
+    """
+    print(help_text)
+
+
 def help_message(func_help: str = None):
     '''
     Prints the help message for the cul CLI.
@@ -127,9 +135,17 @@ def help_message(func_help: str = None):
         help                                                          - Shows the help full message.
         help command                                                  - Shows the help message for the specified command.
 
+        set-reg link                                                  - Changes the registry link in the configuration file to the link inputted by the user.
+        set-reg default                                               - Resets the registry link to the default registry link.
+
     NOTE: To store the output of any command into a file, use the following syntax:
             cul <command> > <filename>.txt
-          The registry URL must be enclosed in double quotes or single quotes and must contain the protocol (http/https).
+          
+    NOTE: The registry URL must be enclosed in double quotes or single quotes and must contain the protocol (http/https).
+
+    NOTE: To display the help message for a specific command, use the following syntax:
+            cul help <command>
+            If the command contains a hyphen/s, replace it with underscore/s.
 
     MADE WITH ❤️ BY ATRI THAKAR
     """
