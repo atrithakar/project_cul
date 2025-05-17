@@ -43,8 +43,8 @@ def generate_module_checksum(folder_path: str) -> str:
     if file_count == 0:
         print("No files found to hash.")
 
-    # return sha256_hash.hexdigest()
-    return "abcd1234"  # Placeholder for the checksum
+    return sha256_hash.hexdigest()
+    # return "abcd1234"  # Placeholder for the checksum
 
 def store_checksum(folder_path: str) -> None:
     '''
