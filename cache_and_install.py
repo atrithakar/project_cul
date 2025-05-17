@@ -222,6 +222,14 @@ def remove_module_from_cache(module_name: str) -> None:
     try:
         shutil.rmtree(os.path.join(CACHE_DIR, module_name))
         # print_in_green(f"Module '{module_name}' removed from cache.")
+
+        with open(os.path.join(CACHE_DIR, "cached.json"), "r") as f:
+            cached_data = json.load(f)
+
+        if module_name in cached_data:
+            del cached_data[module_name]
+            with open(os.path.join(CACHE_DIR, "cached.json"), "w") as f:
+                json.dump(cached_data, f, indent=4)
     except FileNotFoundError:
         print_in_yellow(f"Module '{module_name}' not found in cache.")
     except Exception as e:
