@@ -204,3 +204,25 @@ def show_cache():
         print("Cache is empty.")
     except Exception as e:
         print_in_red(f"Error showing cache: {e}")
+
+def remove_module_from_cache(module_name: str) -> None:
+    '''
+    Removes the specified module from the cache directory
+
+    Args:
+        module_name (str): The name of the module to remove from the cache
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If the module is not found in the cache
+        Exception: If any unexpected error occurs
+    '''
+    try:
+        shutil.rmtree(os.path.join(CACHE_DIR, module_name))
+        # print_in_green(f"Module '{module_name}' removed from cache.")
+    except FileNotFoundError:
+        print_in_yellow(f"Module '{module_name}' not found in cache.")
+    except Exception as e:
+        print_in_red(f"Error removing module from cache: {e}")

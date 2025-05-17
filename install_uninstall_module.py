@@ -4,12 +4,13 @@ import urllib.request
 import shutil
 import io
 import zipfile
-from cache_and_install import check_cache_and_install, cache_module
+from cache_and_install import check_cache_and_install, cache_module, remove_module_from_cache
 from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL
 from init import add_requirements, remove_requirements
 from helper_functions import parse_module
 from search_module import fuzzy_search_module
+from checksum import verify_checksum
 
 def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
     '''
@@ -196,6 +197,20 @@ def install(module_name: str, registry: str = BASE_URL):
             return
 
         fetch_module(module_name=module_name, registry=registry)
+
+    if os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_)):
+        print(f"Verifying {module_name_}...")
+        if not verify_checksum(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_)):
+            print_in_red(f"Checksum verification failed for {module_name_}.")
+            remove_module_from_cache(module_name_)
+            shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_))
+            print_in_red(f"Module '{module_name_}' has been removed from the cache and uninstalled.")
+            return
+        
+        if os.path.exists(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_, "checksum.txt")):
+            os.remove(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_, "checksum.txt"))
+        
+        print_in_green(f"Module '{module_name_}' has been successfully verified")
 
 
 def uninstall(module_name: str):
