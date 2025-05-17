@@ -57,6 +57,17 @@ def check_requirements_and_download(module_name: str, version: str = '1.0.0'):
             else:
                 print(f"Installing {module} from server...")
                 fetch_module(module_name, version)
+            
+            if not verify_checksum(os.path.join(C_CPP_MODULES_DLD_DIR, module_name)):
+                print_in_red(f"Checksum verification failed for {module_name}.")
+                remove_module_from_cache(module_name)
+                shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
+                print_in_red(f"Module '{module_name}' has been removed from the cache and uninstalled.")
+                return
+
+
+            if os.path.exists(os.path.join(C_CPP_MODULES_DLD_DIR, module_name, "checksum.txt")):
+                os.remove(os.path.join(C_CPP_MODULES_DLD_DIR, module_name, "checksum.txt"))
 
     except FileNotFoundError as e:
         print_in_red(f"Error: {e}")
