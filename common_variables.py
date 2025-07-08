@@ -4,9 +4,8 @@ The purpose of this file is to make it easier to manage the variables that are u
 '''
 import appdirs
 
-# BASE_URL = "https://culb.vercel.app"
-DEFAULT_URL = "http://192.168.0.103:8000" # Local server for testing, change to your local server address
-BASE_URL = "http://192.168.0.103:8000" # Local server for testing, change to your local server address
+DEFAULT_URL = "https://cul-backend-fastapi-mongodb.onrender.com" # Default URL for the CUL backend, change to your local server address if needed
+BASE_URL = "https://cul-backend-fastapi-mongodb.onrender.com" # Default URL for the CUL backend, change to your local server address if needed
 
 try:
     with open('.cul/cul_config.txt', 'r') as f:
