@@ -13,7 +13,6 @@ module_info.json
 *.exe
 *.c
 .vscode/
-compile.py
 .cul/
 Backend/
 registry2/
