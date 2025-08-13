@@ -78,6 +78,18 @@ def set_reg_help():
     """
     print(help_text)
 
+def help_new():
+    help_text = """
+    new file_name    - Adds the specified file in the module_info.json file and creates a new file with the specified name if it does not exist.
+    """
+
+def help_remove():
+    help_text = """
+    remove file_name             - Removes the specified file from the module_info.json file.
+    remove file_name --delete    - Removes the specified file from the module_info.json file and deletes the file from the filesystem.
+    """
+    print(help_text)
+
 
 def help_message(func_help: str = None):
     '''
@@ -137,6 +149,11 @@ def help_message(func_help: str = None):
 
         set-reg link                                                  - Changes the registry link in the configuration file to the link inputted by the user.
         set-reg default                                               - Resets the registry link to the default registry link.
+
+        new file_name                                                 - Adds the specified file in the module_info.json file and creates a new file with the specified name if it does not exist.
+
+        remove file_name                                              - Removes the specified file from the module_info.json file.
+        remove file_name --delete                                     - Removes the specified file from the module_info.json file and deletes the file from the filesystem.
 
     NOTE: To store the output of any command into a file, use the following syntax:
             cul <command> > <filename>.txt
