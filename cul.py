@@ -9,6 +9,7 @@ from init import init
 from helper_functions import handle_req_file_ops
 from cul_help import help_message
 from change_registry import change_reg
+from file_ops import add_file, remove_file
 
 def main():
     # Check if the user has provided a command
@@ -152,6 +153,25 @@ def main():
                 help_message()
                 return
             change_reg(sys.argv[2])
+
+        case 'new':
+            if len(sys.argv) < 3:
+                print_in_red("Error: No file name provided for creating a new file.")
+                help_message()
+                return
+            add_file(sys.argv[2])
+
+        case 'remove':
+            if len(sys.argv) < 3:
+                print_in_red("Error: No file name provided for removing a file.")
+                help_message()
+                return
+            
+            delete_file = False
+            if len(sys.argv) > 3 and sys.argv[3] == '--delete':
+                delete_file = True
+
+            remove_file(sys.argv[2], delete_file)
 
         case _:
             print_in_red(f"Unknown command: {command}")
