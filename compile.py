@@ -1,13 +1,17 @@
 import os
+import json
 
 '''
 Currently focussing on:
 - header files with .h file extension only.
 - gcc compiler.
 - c files with .c file extension only.
+- Windows OS only.
 
 - will expand later once this stabilizes.
 '''
+
+# currently in development, code will be cleaned soon and will be made more readable and documented.
 
 def compile(file_path: str):
 
@@ -75,7 +79,21 @@ def compile(file_path: str):
     except Exception as e:
         print(f"Unexpected error: {e}")
 
+def compile_files():
+    with open("module_info.json", "r") as f:
+        data = json.load(f)
+
+    files = data.get("files", [])
+
+    if not files:
+        print("No files to compile.")
+        return
+    
+    for file in files:
+        print(compile(file))
+
         
 if __name__ == '__main__':
-    print(compile("example.c"))               
+    # print(compile("C:/work_of_atri/test/example.c")) 
+    compile_files()              
 
