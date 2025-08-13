@@ -25,6 +25,7 @@ def init(all_yes: bool = False):
         license = "MIT"
         keywords = []
         entry_point = "main.c"
+        files = ["main.c"]
         test_command = "None"
         repo_type = "git"
         repo_url = ""
@@ -45,6 +46,7 @@ def init(all_yes: bool = False):
         entry_point = input("Enter the entry point of the project: (main.py) ")
         if entry_point == "":
             entry_point = "main.c"
+        files = ["main.c"]
         test_command = input("Enter the test command for the project:")
         if test_command == "":
             test_command = "None"
@@ -61,6 +63,7 @@ def init(all_yes: bool = False):
         "license": license,
         "keywords": keywords,
         "main": entry_point,
+        "files": files,
         "scripts": {
             "test": test_command
         },
