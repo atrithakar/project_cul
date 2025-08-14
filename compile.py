@@ -16,7 +16,8 @@ Currently focussing on:
 def compile(file_path: str):
 
     if not os.path.exists(file_path):
-        raise FileNotFoundError(f"The file {file_path} does not exist.")
+        print(f"The file {file_path} does not exist.")
+        return
     
     valid_file_exts = ['.c'] # will add more later
     valid_header_exts = ['.h'] # will add more later
@@ -24,7 +25,8 @@ def compile(file_path: str):
     file_ext = os.path.splitext(file_name)[1]
 
     if file_ext not in valid_file_exts:
-        raise ValueError(f"The file must be a C source file with one of the following extensions: {', '.join(valid_file_exts)}")
+        print(f"The file must be a C source file with one of the following extensions: {', '.join(valid_file_exts)}")
+        return
 
     compile_command = f"gcc {file_name} -o {os.path.splitext(file_name)[0]} "
 
@@ -72,6 +74,7 @@ def compile(file_path: str):
             compile_command += f"-l{module} "
 
         return compile_command
+    
     except FileNotFoundError as e:
         print(f"Error: {e}")
     except ValueError as e:
@@ -95,5 +98,6 @@ def compile_files():
         
 if __name__ == '__main__':
     # print(compile("C:/work_of_atri/test/example.c")) 
-    compile_files()              
+    # compile_files() 
+    print(compile("example.c"))             
 
