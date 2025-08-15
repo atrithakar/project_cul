@@ -1,5 +1,6 @@
 import os
 import json
+import re
 
 '''
 Currently focussing on:
@@ -24,6 +25,9 @@ def compile(file_path: str):
     file_name = os.path.basename(file_path)
     file_ext = os.path.splitext(file_name)[1]
 
+    pattern_compile = re.compile(r'//\s*@cul\.compile')
+    pattern_main_start = re.compile(r'//\s*@cul\.mainStart')
+
     if file_ext not in valid_file_exts:
         print(f"The file must be a C source file with one of the following extensions: {', '.join(valid_file_exts)}")
         return
@@ -35,11 +39,11 @@ def compile(file_path: str):
         with open(file_path, 'r') as file:
             for line in file:
         
-                if '// @cul.mainStart' in line:
+                if pattern_main_start.search(line):
                     print("Main start found, breaking out of the loop because no imports are allowed after this point.")
                     break
                 
-                if not '// @cul.compile' in line:
+                if not pattern_compile.search(line):
                     continue
 
                 line2 = file.readline().strip()
