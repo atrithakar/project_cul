@@ -65,18 +65,11 @@ def compile(file_path: str):
 
                 modules.append(module_name)
 
-        # set -I flags for each imported module
         for module in modules:
-            compile_command += f"-I./c_cpp_modules_dld/{module_name}/include/ "
-        
-        # set -L flags for each imported module
-        for module in modules:
-            compile_command += f"-L./c_cpp_modules_dld/{module_name}/bin/ "
-
-        # set -l flags for each imported module
-        for module in modules:
+            compile_command += f"-I./c_cpp_modules_dld/{module}/include/ "
+            compile_command += f"-L./c_cpp_modules_dld/{module}/bin/ "
             compile_command += f"-l{module} "
-
+        
         return compile_command
     
     except FileNotFoundError as e:
