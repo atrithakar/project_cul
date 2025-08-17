@@ -10,28 +10,47 @@ Currently focussing on:
 - Windows OS only.
 
 - will expand later once this stabilizes.
+
+currently in development, code will be cleaned soon and will be made more readable and documented.
 '''
 
-# currently in development, code will be cleaned soon and will be made more readable and documented.
-
-def extract_module_from_line(line: str, valid_header_exts: list[str]) -> str:
-    start = line.index('"')
-    end = line.rindex('"')
+def parse_include_line(line: str) -> tuple[str, str, str]:
+    start = line.find('"')
+    end = line.rfind('"')
     if start >= end:
-        raise ValueError("Invalid import")
+        raise ValueError("Invalid include line")
     
-    module_name = os.path.basename(line[start + 1:end])
+    full_path = line[start + 1:end]
 
+    parts = full_path.rsplit('/', 1)
+    file_name = parts[1] if len(parts) > 1 else parts[0]
+
+    include_path = parts[0]
+    if include_path.endswith('/include'):
+        include_path = include_path[: -len('/include')]
+
+    if '.' in file_name:
+        module_name, module_ext = file_name.rsplit('.', 1)
+        module_ext = '.' + module_ext
+    else:
+        module_name, module_ext = file_name, ''
+
+    return include_path, module_name, module_ext
+
+
+
+def extract_module_from_line(line: str, valid_header_exts: list[str]) -> tuple[str, str]:
+    
+    include_path, module_name, module_ext = parse_include_line(line)
+    
     if not module_name:
         raise ValueError("Module name cannot be empty.")
     
-    module_ext = os.path.splitext(module_name)[1]
     if module_ext not in valid_header_exts:
         raise ValueError(f"Invalid module file extension. Expected one of: {', '.join(valid_header_exts)}")
     
-    module_name = os.path.splitext(module_name)[0]
 
-    return module_name
+    return module_name, include_path
 
 def compile(file_path: str):
 
@@ -54,7 +73,7 @@ def compile(file_path: str):
     compile_command = f"gcc {file_name} -o {os.path.splitext(file_name)[0]} "
 
     try:
-        modules = []
+        modules = {}
         with open(file_path, 'r') as file:
             for line in file:
         
@@ -66,13 +85,13 @@ def compile(file_path: str):
                     continue
 
                 line2 = file.readline().strip()
-                module_name = extract_module_from_line(line2, valid_header_exts)
+                module_name, include_path = extract_module_from_line(line2, valid_header_exts)
 
-                modules.append(module_name)
+                modules[module_name] = include_path
 
-        for module in modules:
-            compile_command += f"-I./c_cpp_modules_dld/{module}/include/ "
-            compile_command += f"-L./c_cpp_modules_dld/{module}/bin/ "
+        for module, include_path in modules.items():
+            compile_command += f"-I{include_path}/include/ "
+            compile_command += f"-L{include_path}/bin/ "
             compile_command += f"-l{module} "
         
         return compile_command
