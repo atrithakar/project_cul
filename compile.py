@@ -104,10 +104,19 @@ def compile(file_path: str):
         print(f"Unexpected error: {e}")
 
 def compile_files():
-    with open("module_info.json", "r") as f:
-        data = json.load(f)
-
-    files = data.get("files", [])
+    try:
+        with open("module_info.json", "r") as f:
+            data = json.load(f)
+            files = data.get("files", [])
+    except FileNotFoundError:
+        print("module_info.json file not found.")
+        return
+    except json.JSONDecodeError:
+        print("Error decoding JSON from module_info.json.")
+        return
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return
 
     if not files:
         print("No files to compile.")
