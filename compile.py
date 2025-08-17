@@ -14,6 +14,25 @@ Currently focussing on:
 
 # currently in development, code will be cleaned soon and will be made more readable and documented.
 
+def extract_module_from_line(line: str, valid_header_exts: list[str]) -> str:
+    start = line.index('"')
+    end = line.rindex('"')
+    if start >= end:
+        raise ValueError("Invalid import")
+    
+    module_name = os.path.basename(line[start + 1:end])
+
+    if not module_name:
+        raise ValueError("Module name cannot be empty.")
+    
+    module_ext = os.path.splitext(module_name)[1]
+    if module_ext not in valid_header_exts:
+        raise ValueError(f"Invalid module file extension. Expected one of: {', '.join(valid_header_exts)}")
+    
+    module_name = os.path.splitext(module_name)[0]
+
+    return module_name
+
 def compile(file_path: str):
 
     if not os.path.exists(file_path):
@@ -47,21 +66,7 @@ def compile(file_path: str):
                     continue
 
                 line2 = file.readline().strip()
-                start = line2.index('"')
-                end = line2.rindex('"')
-                if start == -1 or end == -1 or start >= end:
-                    raise ValueError("Invalid compile command format.")
-                
-                module_name = os.path.basename(line2[start + 1:end])
-            
-                if not module_name:
-                    raise ValueError("Module name cannot be empty.")
-                
-                module_ext = os.path.splitext(module_name)[1]
-                if module_ext not in valid_header_exts:
-                    raise ValueError(f"Invalid module file extension. Expected one of: {', '.join(valid_header_exts)}")
-                
-                module_name = os.path.splitext(module_name)[0]
+                module_name = extract_module_from_line(line2, valid_header_exts)
 
                 modules.append(module_name)
 
