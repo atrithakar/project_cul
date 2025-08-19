@@ -10,6 +10,7 @@ from helper_functions import handle_req_file_ops
 from cul_help import help_message
 from change_registry import change_reg
 from file_ops import add_file, remove_file
+from compile import compile_files
 
 def main():
     # Check if the user has provided a command
@@ -172,6 +173,9 @@ def main():
                 delete_file = True
 
             remove_file(sys.argv[2], delete_file)
+
+        case 'compile':
+            compile_files()
 
         case _:
             print_in_red(f"Unknown command: {command}")
