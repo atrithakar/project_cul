@@ -43,7 +43,7 @@ def init(all_yes: bool = False):
             license = "MIT"
         keywords = input("Enter the keywords for the project: (separated by commas) ")
         keywords = [keyword.strip() for keyword in keywords.split(",")]
-        entry_point = input("Enter the entry point of the project: (main.py) ")
+        entry_point = input("Enter the entry point of the project: (main.c) ")
         if entry_point == "":
             entry_point = "main.c"
         files = ["main.c"]
@@ -75,6 +75,9 @@ def init(all_yes: bool = False):
 
         ]
     }
+
+    with open(entry_point, "w") as f:
+        pass
 
     with open("module_info.json", "w") as f:
         json.dump(data, f, indent=4)
