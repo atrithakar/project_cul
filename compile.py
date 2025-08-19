@@ -78,7 +78,7 @@ def compile(file_path: str):
             for line in file:
         
                 if pattern_main_start.search(line):
-                    print("Main start found, breaking out of the loop because no imports are allowed after this point.")
+                    # print("Main start found, breaking out of the loop because no imports are allowed after this point.")
                     break
                 
                 if not pattern_compile.search(line):
