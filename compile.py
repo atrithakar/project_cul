@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import subprocess
 
 '''
 Currently focussing on:
@@ -123,11 +124,27 @@ def compile_files():
         return
     
     for file in files:
-        print(compile(file))
+        command = f"C:\\msys64\\msys2_shell.cmd -defterm -no-start -mingw64 -here -c \"{compile("example.c")}\""
+
+        result = subprocess.run(command, check=True, capture_output=True, text=True, cwd=os.getcwd())
+
+        if result.returncode != 0 or result.stderr:
+            print(f"Error compiling {file}: {result.stderr}")
+            continue
+
+        if result.stdout:
+            print(result.stdout)
+
+        print(f"Compiled {file} successfully.")        
 
         
 if __name__ == '__main__':
     # print(compile("C:/work_of_atri/test/example.c")) 
     # compile_files() 
-    print(compile("example.c"))             
+    command = f"C:\\msys64\\msys2_shell.cmd -defterm -no-start -mingw64 -here -c \"{compile("example.c")}\""
+    print(command)
+    result = subprocess.run(command, check=True, capture_output=True, text=True, cwd=os.getcwd())
+
+    print(result.stdout)
+    print(result.stderr)         
 
