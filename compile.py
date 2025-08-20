@@ -9,13 +9,14 @@ Currently focussing on:
 - gcc compiler.
 - c files with .c file extension only.
 - Windows OS only.
+- Using MSYS2 shell for compilation. (Highly recommended if you are on Windows)
 
 - will expand later once this stabilizes.
 
 currently in development, code will be cleaned soon and will be made more readable and documented.
 '''
 
-def parse_include_line(line: str) -> tuple[str, str, str]:
+def parse_include_line(line: str, valid_header_exts: list[str]) -> tuple[str, str]:
     start = line.find('"')
     end = line.rfind('"')
     if start >= end:
@@ -36,20 +37,11 @@ def parse_include_line(line: str) -> tuple[str, str, str]:
     else:
         module_name, module_ext = file_name, ''
 
-    return include_path, module_name, module_ext
-
-
-
-def extract_module_from_line(line: str, valid_header_exts: list[str]) -> tuple[str, str]:
-    
-    include_path, module_name, module_ext = parse_include_line(line)
-    
     if not module_name:
         raise ValueError("Module name cannot be empty.")
     
     if module_ext not in valid_header_exts:
         raise ValueError(f"Invalid module file extension. Expected one of: {', '.join(valid_header_exts)}")
-    
 
     return module_name, include_path
 
@@ -86,7 +78,7 @@ def compile(file_path: str):
                     continue
 
                 line2 = file.readline().strip()
-                module_name, include_path = extract_module_from_line(line2, valid_header_exts)
+                module_name, include_path = parse_include_line(line2, valid_header_exts)
 
                 modules[module_name] = include_path
 
