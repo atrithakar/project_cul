@@ -25,7 +25,7 @@ def init(all_yes: bool = False):
         license = "MIT"
         keywords = []
         entry_point = "main.c"
-        files = ["main.c"]
+        files = [entry_point]
         test_command = "None"
         repo_type = "git"
         repo_url = ""
@@ -42,11 +42,11 @@ def init(all_yes: bool = False):
         if license == "":
             license = "MIT"
         keywords = input("Enter the keywords for the project: (separated by commas) ")
-        keywords = [keyword.strip() for keyword in keywords.split(",")]
+        keywords = [keyword.strip() for keyword in keywords.split(",") if keyword.strip()]
         entry_point = input("Enter the entry point of the project: (main.c) ")
         if entry_point == "":
             entry_point = "main.c"
-        files = ["main.c"]
+        files = [entry_point]
         test_command = input("Enter the test command for the project:")
         if test_command == "":
             test_command = "None"
@@ -76,8 +76,9 @@ def init(all_yes: bool = False):
         ]
     }
 
-    with open(entry_point, "w") as f:
-        pass
+    if not os.path.exists(entry_point):
+        with open(entry_point, "w") as f:
+            pass
 
     with open("module_info.json", "w") as f:
         json.dump(data, f, indent=4)
