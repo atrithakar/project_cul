@@ -81,12 +81,12 @@ cul CLI - Command Line Interface for managing C/C++ modules
 Commands:
 {os.linesep.join(f"  {cmd}" for cmd in HELP_MESSAGES.keys())}
 
-NOTE: To store the output of any command into a file, use:
-    cul <command> > <filename>.txt
-
 NOTE: To display help for a specific command:
     cul help <command>
     (replace hyphen with underscore if present)
+
+NOTE: To store the output of any command into a file, use:
+    cul <command> > <filename>.txt
 
 MADE WITH ❤️ BY ATRI THAKAR
 """
