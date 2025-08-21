@@ -212,11 +212,20 @@ def install(module_name: str, registry: str = BASE_URL):
     if os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_)):
         print(f"Verifying {module_name_}...")
         if not verify_checksum(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_)):
-            print_in_red(f"Checksum verification failed for {module_name_}.")
-            remove_module_from_cache(module_name_)
-            shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_))
-            print_in_red(f"Module '{module_name_}' has been removed from the cache and uninstalled.")
-            return
+            print_in_red(f"Checksum verification failed for {module_name_}.\nThe module may be corrupted.")
+
+            # remove_module_from_cache(module_name_)
+            # shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_))
+            # print_in_red(f"Module '{module_name_}' has been removed from the cache and uninstalled.")
+            # return
+
+            '''
+            If code execution reaches in this if block, it means that the checksum verification failed for that module.
+            In a normal scenario, we'd like to remove the module from the cache and uninstall it to save user from corrupted or tampered files.
+            But currently we are not doing so because the backend is hosted on Render and from our debugging we havve found that Render may be altering file endings causing checksum verification to fail.
+            So, temporarily we are not removing the module from the cache and uninstalling it if checksum verification fails because Render altering file endings doesn't inherently mean that the module is corrupted or tampered.
+            As soon as we find a better way to handle this, we will uncomment the above code and remove the module from the cache and uninstall it if checksum verification fails.
+            '''
         
         if os.path.exists(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_, "checksum.txt")):
             os.remove(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_, "checksum.txt"))
