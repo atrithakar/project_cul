@@ -213,6 +213,7 @@ def install(module_name: str, registry: str = BASE_URL):
         print(f"Verifying {module_name_}...")
         if not verify_checksum(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_)):
             print_in_red(f"Checksum verification failed for {module_name_}.\nThe module may be corrupted.")
+            verified = False
 
             # remove_module_from_cache(module_name_)
             # shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_))
@@ -230,7 +231,8 @@ def install(module_name: str, registry: str = BASE_URL):
         if os.path.exists(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_, "checksum.txt")):
             os.remove(os.path.join(C_CPP_MODULES_DLD_DIR, module_name_, "checksum.txt"))
         
-        print_in_green(f"Module '{module_name_}' has been successfully verified")
+        if verified:
+            print_in_green(f"Module '{module_name_}' has been successfully verified")
 
 
 def uninstall(module_name: str):
