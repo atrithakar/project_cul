@@ -13,9 +13,9 @@
 
 ## What is CUL?
 
-CUL is a command-line utility for the C/C++ programming language that simplifies the downloading and management of external modules (header files).  
+CUL is a command-line utility for the C and C++ programming languages that simplifies the downloading, management, and compilation of external modules. Its primary goal is to hide away the complexity of compiler flags and build configurations behind a single, beginner-friendly command like `cul compile`. By doing so, CUL aims to lower the entry barrier for newcomers and encourages them to build real projects in C/C++ without getting lost in linker errors or makefiles.
 
-**Inspired by Python's pip and NodeJS's npm**, the goal of CUL is to provide an efficient and user-friendly way to manage project-specific header files, making them easier to download, update, and organize.
+**Inspired by Python’s pip and NodeJS’s npm**, CUL aims to bring the same simplicity and efficiency to the C/C++ ecosystem — making it easy to install, update, organize, and compile project with minimal effort.
 
 The code for CUL's Backend can be accessed here: [CUL Backend](https://github.com/atrithakar/cul_backend_fastapi_mongodb).
 
