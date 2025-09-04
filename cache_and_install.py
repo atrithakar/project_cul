@@ -114,7 +114,7 @@ def cache_module(zip_ref: zipfile.ZipFile, module_name: str, version: str = '1.0
     except Exception as e:
         print_in_red(f"Error caching module: {e}")
 
-def check_cache_and_install(module_name: str, version: str = ''):
+def check_cache_and_install(module_name: str, version: str = '', save_dir: str = C_CPP_MODULES_DLD_DIR):
     '''
     Checks if the module of user specified version is available in the cache and installs it if found
 
@@ -142,7 +142,7 @@ def check_cache_and_install(module_name: str, version: str = ''):
         # if os.path.isdir(os.path.join(C_CPP_MODULES_DLD_DIR, module_name)):
             # shutil.rmtree(os.path.join(C_CPP_MODULES_DLD_DIR, module_name))
         if os.path.isdir(cache_version_dir):
-            shutil.copytree(cache_version_dir, os.path.join(C_CPP_MODULES_DLD_DIR, module_name), dirs_exist_ok=True)
+            shutil.copytree(cache_version_dir, save_dir, dirs_exist_ok=True)
             print_in_green(f"Module '{module_name}' Version '{version}' has been successfully installed from cache.")
             return version
         return False
