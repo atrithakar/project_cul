@@ -1,7 +1,7 @@
 import sys
 from colorful_outputs import print_in_red
 from cache_and_install import show_cache, clear_cache
-from install_module import install
+from install_module_2 import install
 from uninstall_module import uninstall
 from update_module import update
 from freeze_requirements import freeze, list_modules
