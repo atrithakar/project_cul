@@ -29,3 +29,6 @@ module_info.json
 # Experimental files
 topo_sort.py
 parse_semver.py
+
+# no longer needed
+install_module.py
