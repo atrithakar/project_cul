@@ -184,6 +184,7 @@ def install(module: str, registry: str = BASE_URL):
     '''
     module_name, module_version = parse_module(module)
     installed_version = get_installed_version(module_name)
+    registry = BASE_URL if not registry else registry
 
     if installed_version:
         print_in_yellow(f"Module '{module_name}' is already installed with version '{installed_version}'.")
