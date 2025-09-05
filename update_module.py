@@ -1,66 +1,11 @@
-import os
-import json
-import urllib.request
-import shutil
-import zipfile
-import io
-from cache_and_install import cache_module, check_cache_and_install
+import os, json, urllib.request
+from cache_and_install import check_cache_and_install
 from colorful_outputs import print_in_green, print_in_red, print_in_yellow
-from common_variables import C_CPP_MODULES_DLD_DIR, BASE_URL, CACHE_DIR
+from common_variables import BASE_URL, CACHE_DIR
 from init import add_requirements
 from helper_functions import parse_module
-
-def update_module(module_name: str, registry: str = BASE_URL):
-    '''
-    Updates the module to the latest version available on the server
-
-    Args:
-        module_name (str): The name of the module to update
-
-    Returns:
-        None
-
-    Raises:
-        HTTPError: If the server returns an unsuccessful status code
-        URLError: If the URL is invalid
-        JSONDecodeError: If the JSON decoding fails
-        Exception: If there is an error while updating the module
-    '''
-    try:
-        registry = BASE_URL if not registry else registry
-        zip_url = f"{registry}/files/{module_name}/"
-        req = urllib.request.Request(zip_url)
-
-        zip_data = None
-        module_info = None
-        version = None
-
-        with urllib.request.urlopen(req) as response:
-            if response.status != 200:
-                raise Exception(f"HTTP {response.status}: Unable to fetch module.")
-
-            zip_data = response.read()
-        zip_stream = io.BytesIO(zip_data)
-
-        with zipfile.ZipFile(zip_stream, 'r') as zip_ref:
-            with zip_ref.open(f"module_info.json") as f:
-                module_info = json.load(f)
-            version = module_info.get("version")
-            module_dir = os.path.join(C_CPP_MODULES_DLD_DIR, module_name)
-            shutil.rmtree(module_dir)
-            os.makedirs(module_dir, exist_ok=True)
-            zip_ref.extractall(module_dir)
-            print_in_green(f"Module '{module_name}' has been successfully updated.")
-            add_requirements(module_name, version)
-            cache_module(zip_ref, module_name, version)
-    except urllib.error.HTTPError as http_err:
-        print_in_red(f"HTTP error: {http_err.code} {http_err.reason}")
-    except urllib.error.URLError as url_err:
-        print_in_red(f"URL error: {url_err.reason}")
-    except json.JSONDecodeError:
-        print_in_red("Failed to decode the JSON response. Please check the server response.")
-    except Exception as e:
-        print_in_red(f"Unexpected Error: {e}")
+from install_module_2 import install, get_installed_version
+from uninstall_module import uninstall
 
 def update(module_name: str, registry: str = BASE_URL):
     '''
@@ -81,20 +26,19 @@ def update(module_name: str, registry: str = BASE_URL):
     
     registry = BASE_URL if not registry else registry
     latest_version_from_server = get_latest_version_str_from_backend(module_name, registry)
-    latest_version_from_cache = "unknown"
-    current_installed_version = get_current_installed_version(module_name)
+    latest_version_from_cache = get_latest_version_str_from_cache(module_name)
+    current_installed_version = get_installed_version(module_name)
     server_error = False
 
-    if current_installed_version == "unknown":
+    if current_installed_version == "":
         print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
         return
 
     if latest_version_from_server == "unknown":
         print(f"Unable to fetch the latest version of {module_name} from the server, trying to fetch from cache...")
         server_error = True
-        latest_version_from_cache = get_latest_version_str_from_cache(module_name)
 
-    if not server_error and latest_version_from_server <= current_installed_version:
+    if (not server_error) and (latest_version_from_server <= current_installed_version):
         print_in_yellow(f"Module '{module_name}' is already up-to-date with the latest version available on the server.")
         return
 
@@ -112,8 +56,13 @@ def update(module_name: str, registry: str = BASE_URL):
         return
 
     print(f"Updating {module_name}...")
-
-    update_module(module_name, registry=registry)
+    uninstall(module_name)
+    
+    if latest_version_from_server != "unknown":
+        module_name = f"{module_name}=={latest_version_from_server}"
+    
+    install(module_name, registry=registry)
+    print_in_green(f"Module '{module_name}' has been successfully updated to the latest version.")
 
 def get_latest_version_str_from_backend(module_name: str, registry: str = BASE_URL):
     '''
@@ -189,32 +138,3 @@ def get_latest_version_str_from_cache(module_name: str):
         print_in_red(f"Unexpected error: {e}")
         return "unknown"
     
-def get_current_installed_version(module_name: str):
-    '''
-    Fetches the current installed version of the module
-
-    Args:
-        module_name (str): The name of the module
-
-    Returns:
-        str: The version of the module or 'unknown' if the module is not found
-
-    Raises:
-        FileNotFoundError: If the module is not found in 'c_cpp_modules_dld'
-        JSONDecodeError: If the JSON decoding fails
-        Exception: If any unexpected error occurs
-    '''
-    try:
-        module_info_path = os.path.join(C_CPP_MODULES_DLD_DIR, module_name, "module_info.json")
-        with open(module_info_path, 'r') as f:
-            module_info = json.load(f)
-            return module_info.get("version", "unknown")
-    except FileNotFoundError:
-        # print_in_yellow(f"Warning: Module '{module_name}' not found in 'c_cpp_modules_dld'.")
-        return "unknown"
-    except json.JSONDecodeError:
-        print_in_red("Error reading JSON file. It may be corrupted.")
-        return "unknown"
-    except Exception as e:
-        print_in_red(f"Unexpected error: {e}")
-        return "unknown"
