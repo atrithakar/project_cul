@@ -12,6 +12,7 @@ from cul_help import help_message
 from change_registry import change_reg
 from file_ops import add_file, remove_file
 from compile import compile_files
+from version_handling import increment_major, increment_minor, increment_patch
 
 def main():
     # Check if the user has provided a command
@@ -177,6 +178,22 @@ def main():
 
         case 'compile':
             compile_files()
+
+        case 'version':
+            if len(sys.argv) < 3:
+                print_in_red("Error: No version command specified.")
+                help_message()
+                return
+            match sys.argv[2]:
+                case 'major':
+                    increment_major()
+                case 'minor':
+                    increment_minor()
+                case 'patch':
+                    increment_patch()
+                case _:
+                    print_in_red(f"Unknown version command: {sys.argv[2]}")
+                    help_message("version")
 
         case _:
             print_in_red(f"Unknown command: {command}")
