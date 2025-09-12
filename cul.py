@@ -26,7 +26,7 @@ def main():
         case 'install':
             if len(sys.argv) < 3:
                 print_in_red("Error: No library specified for installation.")
-                help_message()
+                help_message("install")
                 return
 
             registry = None
@@ -36,7 +36,7 @@ def main():
                 reg_index = sys.argv.index('--use-reg')
                 if reg_index + 1 >= len(sys.argv):
                     print_in_red("Error: No registry link was provided")
-                    help_message()
+                    help_message("install")
                     return
                 
                 registry = sys.argv[reg_index + 1]
@@ -45,7 +45,7 @@ def main():
             if sys.argv[2] == '-r':
                 if len(sys.argv) < 4:
                     print_in_red("Error: No requirements file specified for installation.")
-                    help_message()
+                    help_message("install")
                     return
                 handle_req_file_ops(sys.argv[3], install, registry)
             else:
@@ -55,12 +55,12 @@ def main():
         case 'uninstall':
             if len(sys.argv) < 3:
                 print_in_red("Error: No library specified for uninstallation.")
-                help_message()
+                help_message("uninstall")
                 return
             if sys.argv[2] == '-r':
                 if len(sys.argv) < 4:
                     print_in_red("Error: No requirements file specified for uninstallation.")
-                    help_message()
+                    help_message("uninstall")
                     return
                 handle_req_file_ops(sys.argv[3], uninstall)
             else:
@@ -70,7 +70,7 @@ def main():
         case 'update':
             if len(sys.argv) < 3:
                 print_in_red("Error: No library specified for updating.")
-                help_message()
+                help_message("update")
                 return
 
             registry = None
@@ -80,7 +80,7 @@ def main():
                 reg_index = sys.argv.index('--use-reg')
                 if reg_index + 1 >= len(sys.argv):
                     print_in_red("Error: No registry link was provided")
-                    help_message()
+                    help_message("update")
                     return
                 
                 registry = sys.argv[reg_index + 1]
@@ -89,7 +89,7 @@ def main():
             if sys.argv[2] == '-r':
                 if len(sys.argv) < 4:
                     print_in_red("Error: No requirements file specified for installation.")
-                    help_message()
+                    help_message("update")
                     return
                 handle_req_file_ops(sys.argv[3], update, registry)
             else:
@@ -112,7 +112,7 @@ def main():
         case 'search':
             if sys.argv[-1] == "--use-reg":
                 print_in_red("Error: No registry link was provided")
-                help_message()
+                help_message("search")
                 return
 
             registry = ''
@@ -122,21 +122,21 @@ def main():
             if sys.argv[2] == '--fuzzy':
                 if len(sys.argv) < 4:
                     print_in_red("Error: No library specified for searching.")
-                    help_message()
+                    help_message("search")
                     return
                 fuzzy_search_module(query=sys.argv[3], called_by_user=True, registry=registry)
                 return
             
             if len(sys.argv) < 3:
                 print_in_red("Error: No library specified for searching.")
-                help_message()
+                help_message("search")
                 return
             search_module(sys.argv[2], registry)
 
         case 'cache':
             if len(sys.argv) < 3:
                 print_in_red("Error: No command specified related to cache.")
-                help_message()
+                help_message("cache")
                 return
             match sys.argv[2]:
                 case 'clear':
@@ -145,7 +145,7 @@ def main():
                     show_cache()
                 case _:
                     print_in_red(f"Unknown cache command: {sys.argv[2]}")
-                    help_message()
+                    help_message("cache")
 
         case 'init':
             init(True if len(sys.argv) > 2 and sys.argv[2] == '-y' else False)
@@ -153,21 +153,21 @@ def main():
         case 'set-reg':
             if len(sys.argv) < 3:
                 print_in_red("Error: No registry link was provided")
-                help_message()
+                help_message("set_reg")
                 return
             change_reg(sys.argv[2])
 
         case 'new':
             if len(sys.argv) < 3:
                 print_in_red("Error: No file name provided for creating a new file.")
-                help_message()
+                help_message("new")
                 return
             add_file(sys.argv[2])
 
         case 'remove':
             if len(sys.argv) < 3:
                 print_in_red("Error: No file name provided for removing a file.")
-                help_message()
+                help_message("remove")
                 return
             
             delete_file = False
