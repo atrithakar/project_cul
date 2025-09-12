@@ -1,7 +1,21 @@
 import json
 from colorful_outputs import print_in_red
 def increment_patch():
+    '''
+    Reads the current version from module_info.json, increments the patch version by 1, and writes the updated version back to the file.
+
+    Args:
+        None
     
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If module_info.json does not exist.
+        json.JSONDecodeError: If module_info.json is not a valid JSON.
+        ValueError: If the version format is incorrect.
+        Exception: For any other unexpected errors.
+    '''
     try:
         with open("module_info.json", "r") as f:
             module_info = json.load(f)
@@ -26,6 +40,20 @@ def increment_patch():
         print_in_red(f"An unexpected error occurred: {e}")
 
 def increment_minor():
+    '''
+    Reads the current version from module_info.json, increments the minor version by 1, resets the patch version to 0, and writes the updated version back to the file.
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If module_info.json does not exist.
+        json.JSONDecodeError: If module_info.json is not a valid JSON.
+        ValueError: If the version format is incorrect.
+        Exception: For any other unexpected errors.
+    '''
     try:
         with open("module_info.json", "r") as f:
             module_info = json.load(f)
@@ -51,6 +79,21 @@ def increment_minor():
         print_in_red(f"An unexpected error occurred: {e}")
 
 def increment_major():
+    '''
+    Reads the current version from module_info.json, increments the major version by 1, resets the minor and patch versions to 0, and writes the updated version back to the file.
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If module_info.json does not exist.
+        json.JSONDecodeError: If module_info.json is not a valid JSON.
+        ValueError: If the version format is incorrect.
+        Exception: For any other unexpected errors.
+    '''
     try:
         with open("module_info.json", "r") as f:
             module_info = json.load(f)
