@@ -72,6 +72,12 @@ HELP_MESSAGES = {
 
     "compile": """
     compile - Compiles the files specified in the module_info.json file while automatically detecting the modules to be included based on the `@cul.compile` comments in the files and handles the compiler flags accordingly.
+    """,
+
+    "version" : """
+    version patch   - Increments the patch version in module_info.json.
+    version minor   - Increments the minor version in module_info.json and resets the patch version to 0.
+    version major   - Increments the major version in module_info.json and resets the minor and patch versions to 0.
     """
 }
 
