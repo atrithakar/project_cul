@@ -3,7 +3,7 @@ from cache_and_install import check_cache_and_install
 from colorful_outputs import print_in_green, print_in_red, print_in_yellow
 from common_variables import BASE_URL, CACHE_DIR
 from init import add_requirements
-from helper_functions import parse_module
+from helper_functions import parse_module, compare_versions
 from install_module_2 import install, get_installed_version
 from uninstall_module import uninstall
 
@@ -38,17 +38,21 @@ def update(module_name: str, registry: str = BASE_URL):
         print(f"Unable to fetch the latest version of {module_name} from the server, trying to fetch from cache...")
         server_error = True
 
-    if (not server_error) and (latest_version_from_server <= current_installed_version):
-        print_in_yellow(f"Module '{module_name}' is already up-to-date with the latest version available on the server.")
-        return
-
     if server_error and latest_version_from_cache == "unknown":
         print_in_red(f"Error: Unable to fetch the latest version of '{module_name} from the cache. Try again later or check the name of the module again.")
         return
 
-    if latest_version_from_cache != "unknown" and latest_version_from_cache <= current_installed_version:
-        print_in_yellow(f"Module '{module_name}' is already up-to-date with the latest version available in the cache.")
-        return
+    if not server_error:
+        res = compare_versions(latest_version_from_server, current_installed_version)
+        if res == -1 or res == 0:
+            print_in_yellow(f"Module '{module_name}' is already up-to-date with the latest version available on the server.")
+            return
+        
+    if latest_version_from_cache != "unknown":
+        res = compare_versions(latest_version_from_cache, current_installed_version)
+        if res == -1 or res == 0:
+            print_in_yellow(f"Module '{module_name}' is already up-to-date with the latest version available in the cache.")
+            return
 
     if server_error:
         if check_cache_and_install(module_name, latest_version_from_cache):
