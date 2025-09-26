@@ -59,3 +59,33 @@ def handle_req_file_ops(file_path: str, func: callable, registry: str = None):
         print_in_red(f"Error: {file_path} not found.")
     except Exception as e:
         print_in_red(f"Error: {e}")
+    
+def compare_versions(version1: str, version2: str) -> int:
+    '''
+    Compares two semantic version strings.
+
+    Args:
+        version1 (str): The first semantic version string (e.g., "1.2.3")
+        version2 (str): The second semantic version string (e.g., "1.2.4")
+
+    Returns:
+        int: -1 if version1 < version2,
+              0 if version1 == version2,
+              1 if version1 > version2
+
+    Raises:
+        ValueError: If either version string is not in the correct format
+    '''
+    try:
+        v1_tuple = tuple(map(int, version1.split('.')))
+        v2_tuple = tuple(map(int, version2.split('.')))
+    except ValueError:
+        raise ValueError(f"Invalid version format. Expected format: 'X.Y.Z' where X, Y, and Z are integers.")
+
+
+    if v1_tuple < v2_tuple:
+        return -1
+    elif v1_tuple > v2_tuple:
+        return 1
+    else:
+        return 0
