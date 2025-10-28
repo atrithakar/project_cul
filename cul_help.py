@@ -87,14 +87,13 @@ cul CLI - Command Line Interface for managing C/C++ modules
 Commands:
 {os.linesep.join(f"  {cmd}" for cmd in HELP_MESSAGES.keys())}
 
-NOTE: To display help for a specific command:
-    cul help <command>
-    (replace hyphen with underscore if present)
-
-NOTE: To store the output of any command into a file, use:
-    cul <command> > <filename>.txt
+Usage:
+  cul help <command>        Display help for a specific command
+  cul <command> > file.txt  Store output in a file
 
 MADE WITH ❤️ BY ATRI THAKAR
+
+Github Repository: https://github.com/atrithakar/project_cul
 """
 
 def help_message(command: str = None):
