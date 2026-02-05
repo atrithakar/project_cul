@@ -32,3 +32,6 @@ parse_semver.py
 
 # no longer needed
 install_module.py
+
+# python virtual environment directory
+cul_env/
