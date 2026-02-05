@@ -33,8 +33,8 @@ Pygments==2.19.1
 pyinstaller==6.11.1
 pyinstaller-hooks-contrib==2024.11
 python-dateutil==2.9.0.post0
-pywin32==308
-pywin32-ctypes==0.2.3
+pywin32==308; sys_platform=='win32'
+pywin32-ctypes==0.2.3; sys_platform=='win32'
 pyzmq==26.2.1
 RapidFuzz==3.11.0
 setuptools==75.6.0
